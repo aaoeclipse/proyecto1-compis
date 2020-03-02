@@ -21,7 +21,7 @@ public class Automata {
     }
 
     public boolean Simulate(){
-
+        return false;
     }
 
 

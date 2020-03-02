@@ -10,58 +10,30 @@ package lexicalanalyzer.tokens;
 
 import java.util.ArrayList;
 import java.util.List;
-import lexicalanalyzer.reader.ReadSourceCode;
 
 public class Tree{
     Node root = null;
     Node currNode = null;
     Node prevNode = null;
-    ReadSourceCode reader = null;
     
     /**
      * Creats a tree by reading char by char
      * @param reader
      * @return null
      */
-    public Tree(ReadSourceCode reader){
-        this.reader = reader;
-
-        // read first char
-        int c = reader.readNextChar();
-        // while has more (c != EOF)
-        while ( c != -2) {
-           // ignore space and enters
-           if((char) c != '\n' || (char) c == ' '){
-                if ((char) c == '*'){
-                    // TODO
-                }
-                else if ((char) c == '|'){
-                    // TODO
-                }
-                else if ((char) c == '.'){
-                    // TODO
-                }
-                else if ((char) c == '('){
-                    reader.readNextChar();
-                    while ((char) c != ')'){
-                        // TODO
-                        reader.readNextChar();
-                    }
-                }
-                else{
-                    // aqui significa que es un character que no esta en la tabla de symbolos
-                    
-                }
-            }
-            // next char
-            c = reader.readNextChar();
-           
-        }
-
+    public Tree(){
+        
     }
 
-    public void addNode(){
-
+    public void addNode(Node node, boolean left){
+        if (root == null){
+            root = node;
+            return;
+        }
+        if (left){
+            
+        }
+        
     }
 
     // goDeep() goes all the way to the left and so forth

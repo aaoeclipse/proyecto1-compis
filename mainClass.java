@@ -5,8 +5,8 @@
  */
 
 import lexicalanalyzer.reader.*;
+import lexicalanalyzer.PostfixTree;
 import lexicalanalyzer.automatas.*;
-import lexicalanalyzer.automatas.tokens.*;
 
 
 public class mainClass{
@@ -14,11 +14,12 @@ public class mainClass{
         ReadSourceCode reader = new ReadSourceCode();
         // Open File
         if (reader.runFile(args)){
-            // Create Tree
-            // Tree sintaxTree = new Tree(reader);
-
-            // Pass Tree to Automata
-            System.out.println((int)'\n');
+            reader.changeToPostfix();
+            PostfixTree tree = new PostfixTree(reader);
+            if (tree.getRoot() == null){
+                System.out.println("It's null");
+            }
+            System.out.println(tree.getRoot());
             
         }
     }

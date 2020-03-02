@@ -1,6 +1,7 @@
 /** Autonoma no definido 
  *  Creado por: Santiago Paiz
- *  input: NFA N output: A DFA D accepting the same language as N
+ *  @param PostfixTree given by the class PostfixTree
+ *  @return NFA 
  * **/
 
 package lexicalanalyzer.automatas;
@@ -24,4 +25,9 @@ public class NFA extends Automata{
         // if (s esta en F) return true;
         return false;
     }    
+
+
+    private void Thompson(){
+        
+    }
 }

@@ -29,6 +29,7 @@ public class ReadSourceCode {
     // =========== POSTFIX ====================
     private Queue<Integer> postfix;
     private Stack<Integer> stack;
+    private boolean isConcat = false;
 
     static int Importance(int ch1) 
     { 
@@ -73,7 +74,6 @@ public class ReadSourceCode {
             reader = new BufferedReader(new FileReader(args[0]));
             System.out.println("[+] File found!");
 
-
             // Read fisrt line
             currentLineString.add(reader.readLine());
 
@@ -88,9 +88,6 @@ public class ReadSourceCode {
                     currentLinePos++;
                 }
             }
-            // for (String s: currentLineString){
-            //     System.out.println(s);
-            // }
             currentLinePos = 0;
             return true;
 
@@ -108,40 +105,20 @@ public class ReadSourceCode {
     public void changeToPostfix(){
         this.postfix = new LinkedList<>();
         this.stack = new Stack<>();
-        
+        this.isConcat = false;
+
         int curr = readNextCharInfile();
         while (curr >= 0){
-            // System.out.println("char: " + (char) curr + " | int: " + curr);
-            // if curr is a letter or a number, then add it to the queue
-            if (Character.isLetterOrDigit((char) curr)){
-                this.postfix.add(curr);
+            if (DefaultValues.letter.contains(curr) && isConcat){
+                System.out.println("yep");
+                isConcat = false;
+                parsePostfix((int) '+');
+            } else {
+                System.out.println("curr: " + curr);
+                parsePostfix(curr);
+                curr = readNextCharInfile();
             }
-            // if curr is opern parentesis then we will have to push it on to stack
-            else if ((char) curr == '('){
-                stack.push(curr);
-            }
-            // if it's a close bracket then it has to pop until it finds the last open parentesis
-            else if ((char) curr == ')'){
-                while (!stack.isEmpty() && stack.peek() != '(')
-                    this.postfix.add(stack.pop());
-                
-                if (!stack.isEmpty() && stack.peek() != '(') 
-                    System.out.println("[-] ERROR: ReadSourceCode: changeToPostfix: invalid expression (in parenteces)"); // invalid expression                 
-                else
-                    stack.pop(); 
-            }
-            // else, it means there is an operator
-            else{
-                while (!stack.isEmpty() && Importance((char) curr) <= Importance(stack.peek())){ 
-                    if(stack.peek() == '(') 
-                        System.out.println("[-] ERROR: ReadSourceCode: changeToPostfix: invalid expression (else)"); 
-                        this.postfix.add(stack.pop());
-                } 
-                stack.push(curr); 
-            } 
 
-            // read next char
-            curr = readNextCharInfile();
         }
 
         // pop all the operators from the stack 
@@ -151,6 +128,42 @@ public class ReadSourceCode {
             this.postfix.add(stack.pop()); 
          } 
 
+    }
+
+    private void parsePostfix(int curr){
+                    // if curr is a letter or a number, then add it to the queue
+                    if (DefaultValues.letter.contains(curr)){
+                        this.postfix.add(curr);
+                        isConcat = true;
+                    }
+                    // if curr is opern parentesis then we will have to push it on to stack
+                    else if ((char) curr == '('){
+                        stack.push(curr);
+                    }
+                    // if it's a close bracket then it has to pop until it finds the last open parentesis
+                    else if ((char) curr == ')'){
+                        while (!stack.isEmpty() && stack.peek() != '(')
+                            this.postfix.add(stack.pop());
+                        
+                        if (!stack.isEmpty() && stack.peek() != '(') 
+                            System.out.println("[-] ERROR: ReadSourceCode: changeToPostfix: invalid expression (in parenteces)"); // invalid expression                 
+                        else
+                            stack.pop(); 
+                    } 
+                    // else, it means there is an operator
+                    else if (DefaultValues.operators.contains(curr)){
+                        while (!stack.isEmpty() && Importance((char) curr) <= Importance(stack.peek())){ 
+                            if(stack.peek() == '(') 
+                                System.out.println("[-] ERROR: ReadSourceCode: changeToPostfix: invalid expression (else)"); 
+                                this.postfix.add(stack.pop());
+                        } 
+                        isConcat = false;
+                        stack.push(curr); 
+                    } else {
+                        System.err.println("[-] ERROR: (ReadSourceCode:changeToPostfix) - cannot interpret sign: " + (char) curr);
+                    }
+        
+                    // read next char
     }
 
     /**

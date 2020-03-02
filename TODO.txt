@@ -1,0 +1,13 @@
+FIXING:
+
+FIXED:
+✔ No implementation for concat. example; ab, the parser before postfix has to add a plus sign
+
+TO-DO List
+✔  Read file
+✔  Parse file to regular expression (remove spaces and add plus sign)
+✔  Parse to postfix
+✔  Transform to postfix tree
+✘  NFA
+✘  DFA
+✘  DFA v2

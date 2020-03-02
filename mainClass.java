@@ -15,6 +15,7 @@ public class mainClass{
         // Open File
         if (reader.runFile(args)){
             reader.changeToPostfix();
+            reader.printPostfix();
             PostfixTree tree = new PostfixTree(reader);
             if (tree.getRoot() == null){
                 System.out.println("It's null");

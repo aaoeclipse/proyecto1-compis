@@ -110,11 +110,9 @@ public class ReadSourceCode {
         int curr = readNextCharInfile();
         while (curr >= 0){
             if (DefaultValues.letter.contains(curr) && isConcat){
-                System.out.println("yep");
                 isConcat = false;
                 parsePostfix((int) '+');
             } else {
-                System.out.println("curr: " + curr);
                 parsePostfix(curr);
                 curr = readNextCharInfile();
             }
@@ -210,10 +208,12 @@ public class ReadSourceCode {
 
 
 	public void printPostfix() {
+        System.out.println("POSTFIX");
         System.out.println(postfix);
         for (int i : this.postfix) {
-            System.out.println((char) i);
+            System.out.print((char) i);
         }
+        System.out.println();
 	}
 
 }

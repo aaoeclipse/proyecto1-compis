@@ -6,17 +6,20 @@
 
 package lexicalanalyzer.automatas;
 
+import java.util.ArrayList;
+
+import lexicalanalyzer.PostfixTree;
 import lexicalanalyzer.reader.ReadSourceCode;
+import lexicalanalyzer.tokens.Node;
 
 public class NFA extends Automata{
-    private ReadSourceCode reader;
+    private PostfixTree postfixTree;
 
-    public NFA(ReadSourceCode reader){
-        this.reader = reader;
-        // inicial = new Estado(0);
+    public NFA(PostfixTree postfixTree){
+        this.postfixTree = postfixTree;
     }
 
-    public boolean simulating(Estado s0){
+    public boolean simulating(ReadSourceCode reader, ArrayList<Estado> estados, Transition transitions, Estado s0){
         char c = (char) reader.readNextChar();
         // while ( c != eof) {
         //      s = mover(s,c);
@@ -27,7 +30,26 @@ public class NFA extends Automata{
     }    
 
 
+    /** Method: Thompson creats a directional graph that represents the NFa
+     *  @param void
+     *  @return NFA (directional graph)
+      */
     private void Thompson(){
-        
+        // while(postfixTree.unvisited())
+            // postfixTree.getBottomLeft()
+            // postfixTree.getBrotherRight()
+            // postfixTree.getParent()
+        int parent = 0;
+        switch ((char) parent){
+            case '|':
+                break;
+            case '*':
+                break;
+            case '?':
+                break;
+            case '+':
+                break;
+
+        }
     }
 }

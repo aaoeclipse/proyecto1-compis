@@ -18,7 +18,7 @@ public class Node<T>{
     private Node<T> left_child;
     private Node<T> right_child;
 
-    private int layer = 0;
+    private int nodeId = 0;
 
     public Node(){ }
     
@@ -28,9 +28,11 @@ public class Node<T>{
         this.data = data;
     }
 
-    public Node(T data, int layer){
+    public Node(T data, int nodeId){
+        left_child = null;
+        right_child = null;
         this.data = data;
-        this.layer = layer;
+        this.nodeId = nodeId;
     }
 
     public boolean isOperand(){
@@ -62,8 +64,8 @@ public class Node<T>{
         return this.right_child;
     }
 
-    public int getLayer(){
-        return this.layer;
+    public int getnodeId(){
+        return this.nodeId;
     }
 
     /* SETTERS */
@@ -82,8 +84,8 @@ public class Node<T>{
         this.right_child = child;
     }
 
-    public void setLayer(int layer){
-        this.layer = layer;
+    public void setnodeId(int nodeId){
+        this.nodeId = nodeId;
     }
 
     @Override

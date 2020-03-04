@@ -7,20 +7,25 @@
 package lexicalanalyzer.automatas;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import lexicalanalyzer.PostfixTree;
 import lexicalanalyzer.reader.ReadSourceCode;
 import lexicalanalyzer.tokens.Node;
 
+
 public class NFA extends Automata{
     private PostfixTree postfixTree;
+    // NFA -> States, Simbols, Transitinos, initial state, final state
 
     public NFA(PostfixTree postfixTree){
         this.postfixTree = postfixTree;
     }
 
-    public boolean simulating(ReadSourceCode reader, ArrayList<Estado> estados, Transition transitions, Estado s0){
-        char c = (char) reader.readNextChar();
+
+
+    public boolean simulating(){
+        // char c = (char) reader.readNextChar();
         // while ( c != eof) {
         //      s = mover(s,c);
         //      c = (char) reader.readNextChar();
@@ -42,6 +47,7 @@ public class NFA extends Automata{
         int parent = 0;
         switch ((char) parent){
             case '|':
+                
                 break;
             case '*':
                 break;
@@ -51,5 +57,17 @@ public class NFA extends Automata{
                 break;
 
         }
+    }
+
+    private void createStates(){
+
+    }
+
+    private void createSymbols(){
+
+    }
+
+    private void createTransitions(){
+
     }
 }

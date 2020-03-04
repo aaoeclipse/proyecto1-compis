@@ -6,15 +6,16 @@
  **/
 
 package lexicalanalyzer.automatas;
+import lexicalanalyzer.automatas.equations.*;
 
 import java.util.Set;
 
 public class Automata {
-    private Set<Integer> setOfSymbols;
-    private Set<Estado> States;
+    private Set<State> states;
     private Set<Transition> transitions;
-    private Set<Estado> initialState;
-    private Set<Estado> finalState;
+    private Set<Symbol> symbols;
+    private Set<State> initialState;
+    private Set<State> finalStates;
 
     public Automata(){
         

@@ -19,8 +19,24 @@ public class Transition {
         System.out.println(toString());
     }
 
+    /**
+     * makeTransition, modifies the table in the position symbol, state to the next state that should go
+     * @param symbol
+     * @param state
+     * @param finalState
+     */
     public void makeTransition(int symbol, int state, int finalState){
+        transition[state][symbol] = finalState;
+    }
 
+    /**
+     * tansit works by showing the next state, if it's -1 means it died there.
+     * @param symbol
+     * @param state
+     * @return int of the state in the table
+     */
+    public int transit(int symbol, int state){
+        return transition[state][symbol];
     }
     
     @Override

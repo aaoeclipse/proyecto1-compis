@@ -34,9 +34,9 @@ public class DefaultValues {
                 // LOWER CASE
                 add(97+i);
             }
-        
+            add(EPSILON);        
         }
     };
     public static int EOF = -2;
-
+    public static int EPSILON = (int) '@';
 }

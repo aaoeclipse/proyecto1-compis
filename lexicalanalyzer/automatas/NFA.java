@@ -16,15 +16,14 @@ import lexicalanalyzer.tokens.Node;
 
 public class NFA extends Automata{
     private PostfixTree postfixTree;
-    // NFA -> States, Simbols, Transitinos, initial state, final state
 
     public NFA(PostfixTree postfixTree){
         this.postfixTree = postfixTree;
     }
 
 
-
-    public boolean simulating(){
+    @Override
+    public boolean Simulate(){
         // char c = (char) reader.readNextChar();
         // while ( c != eof) {
         //      s = mover(s,c);
@@ -47,7 +46,6 @@ public class NFA extends Automata{
         int parent = 0;
         switch ((char) parent){
             case '|':
-                
                 break;
             case '*':
                 break;

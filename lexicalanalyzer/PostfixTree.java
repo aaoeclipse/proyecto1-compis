@@ -8,6 +8,9 @@ package lexicalanalyzer;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Set;
+import java.util.HashSet;
+
 import lexicalanalyzer.reader.ReadSourceCode;
 import lexicalanalyzer.tokens.*;
 
@@ -23,10 +26,15 @@ public class PostfixTree{
     private Node<Integer> currentLeft;
     private Node<Integer> currentBrother;
     private Node<Integer> currentFather;
+    // For the automata
+    private Set<Integer> allSymbols;
+    private ArrayList<Integer> allOperants;
 
     public PostfixTree(ReadSourceCode reader){
         this.nodeId = 0;
         this.reader = reader;
+        this.allSymbols = new HashSet<>();
+        this.allOperants = new ArrayList<>();
         createTree();
         System.out.println("tree created");
     }
@@ -47,6 +55,12 @@ public class PostfixTree{
         int currChar = reader.readNextChar();
         
         while (currChar != DefaultValues.EOF){
+
+            if (DefaultValues.letter.contains(currChar)){
+                allSymbols.add(currChar);
+            }else if (DefaultValues.operators.contains(currChar)){
+                allOperants.add(currChar);
+            }
 
             if (DefaultValues.operators.contains(currChar)){
                 // This means it's an operand
@@ -148,6 +162,16 @@ public class PostfixTree{
         Node<Integer> newNode = new Node<Integer>(value, this.nodeId);
         this.nodeId++;
         return newNode;
+    }
+    /**
+     * 
+     * @return all symbols 
+     */
+    public Set<Integer> getAllSymbols(){
+        return this.allSymbols;
+    }
+    public ArrayList<Integer> getAllOperants(){
+        return this.allOperants;
     }
     
 }

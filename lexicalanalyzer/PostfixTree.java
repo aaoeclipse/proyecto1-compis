@@ -15,13 +15,13 @@ import lexicalanalyzer.reader.ReadSourceCode;
 import lexicalanalyzer.tokens.*;
 
 public class PostfixTree{
+    private int size;
     
     // Reader which will send the char by char but in this case it's an int
     private ReadSourceCode reader;
     // root node (main node)
     private Node<Integer> root;
      // Tree Transversal
-    private ArrayList<Integer> visitedIds = new ArrayList<>();
     private int nodeId;
 
     // For the automata
@@ -30,6 +30,7 @@ public class PostfixTree{
 
     public PostfixTree(ReadSourceCode reader){
         this.nodeId = 0;
+        this.size = 0;
         this.reader = reader;
         this.allSymbols = new HashSet<>();
         this.allOperants = new ArrayList<>();
@@ -51,8 +52,10 @@ public class PostfixTree{
         Stack<Node<Integer>> nodeStack = new Stack<>();
 
         int currChar = reader.readNextChar();
+        this.size = 1;
         
         while (currChar != DefaultValues.EOF){
+            this.size++;
 
             // it adds the symbol or operand to the stack
             if (DefaultValues.letter.contains(currChar)){
@@ -112,8 +115,9 @@ public class PostfixTree{
                         default:
                             currNode = new Node<Integer>(currChar);
 
-                            currNode.addLeftChild( newNodeId( operand.pop() ) );
                             currNode.addRightChild( newNodeId( operand.pop() ) );
+                            currNode.addLeftChild( newNodeId( operand.pop() ) );
+
                             break;
                     }
 
@@ -169,4 +173,7 @@ public class PostfixTree{
         return this.allOperants;
     }
     
+    public int size(){
+        return this.size;
+    }
 }

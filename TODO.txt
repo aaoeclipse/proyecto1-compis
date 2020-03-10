@@ -8,8 +8,9 @@ TO-DO List
 ✔  Parse file to regular expression (remove spaces and add plus sign)
 ✔  Parse to postfix
 ✔  Transform to postfix tree
-✘  Tree visitor
+*  Tree visitor
 ✘  Graph Representation
-✘  NFA
+*  NFA
+*  Thompson
 ✘  DFA
 ✘  DFA v2

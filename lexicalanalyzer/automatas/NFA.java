@@ -8,17 +8,23 @@ package lexicalanalyzer.automatas;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.Stack;
 
 import lexicalanalyzer.PostfixTree;
+import lexicalanalyzer.VisitorTree;
 import lexicalanalyzer.reader.ReadSourceCode;
 import lexicalanalyzer.tokens.Node;
 
 
 public class NFA extends Automata{
+    
+    private Stack<Node<Integer>> nodeStack;
+    private VisitorTree visitor;
     private PostfixTree postfixTree;
 
     public NFA(PostfixTree postfixTree){
         this.postfixTree = postfixTree;
+        this.visitor = new VisitorTree(postfixTree);
         Thompson();
     }
 
@@ -40,24 +46,32 @@ public class NFA extends Automata{
      *  @return NFA (directional graph)
       */
     private void Thompson(){
-        // postfixTree.getFamilyMemebers();
-        // while(postfixTree.unvisited())
-            // postfixTree.getBottomLeft()
-            // postfixTree.getBrotherRight()
-            // postfixTree.getParent()
-        /* int parent = 0;
-        switch ((char) parent){
-            case '|':
+        System.out.println();
+        Node<Integer> currNode = null;  
 
-                break;
-            case '*':
-                break;
-            case '?':
-                break;
-            case '&':
-                break;
+        System.out.println("1");
+        currNode = this.visitor.Next();
+        System.out.println(currNode);
 
+        System.out.println("2");
+        currNode = this.visitor.Next();
+        System.out.println(currNode);
+
+        System.out.println("3");
+        currNode = this.visitor.Next();
+        System.out.println(currNode);
+
+        /* switch (currNode.getData()){
+            case (int) '|':
+                break;
+            case (int) '&':
+                break;
+            case (int) '*':
+                break;
+            default:
+                break;
         } */
+        
     }
 
     private void createStates(){

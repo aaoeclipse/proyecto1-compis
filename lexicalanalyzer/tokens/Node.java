@@ -92,6 +92,18 @@ public class Node<T>{
         this.nodeId = nodeId;
     }
 
+    public boolean isLeftChild(){
+        if (this.left_child != null)
+            return true;
+        return false;
+    }
+
+    public boolean hasRightChild(){
+        if (this.right_child != null)
+            return true;
+        return false;
+    }
+
     @Override
     public String toString(){
         String stringToReturn = "";

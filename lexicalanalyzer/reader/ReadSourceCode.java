@@ -40,6 +40,7 @@ public class ReadSourceCode {
         case '|': 
         case '?':
         case '*':
+        case '&':
             return 1; 
        
         case '-': 
@@ -111,7 +112,7 @@ public class ReadSourceCode {
         while (curr >= 0){
             if (DefaultValues.letter.contains(curr) && isConcat){
                 isConcat = false;
-                parsePostfix((int) '+');
+                parsePostfix((int) '&');
             } else {
                 parsePostfix(curr);
                 curr = readNextCharInfile();
@@ -130,7 +131,7 @@ public class ReadSourceCode {
 
     private void parsePostfix(int curr){
                     // if curr is a letter or a number, then add it to the queue
-                    if (DefaultValues.letter.contains(curr)){
+                    if (DefaultValues.letter.contains(curr) || curr==(int)'*'){
                         this.postfix.add(curr);
                         isConcat = true;
                     }

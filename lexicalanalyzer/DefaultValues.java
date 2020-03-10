@@ -10,6 +10,7 @@ public class DefaultValues {
             add((int) '+');
             add((int) '?');
             add((int) '/');
+            add((int) '&');
         }
     };
     public static ArrayList<Integer> digits = new ArrayList<Integer>(){

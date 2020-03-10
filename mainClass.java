@@ -15,7 +15,11 @@ public class mainClass{
         // Open File
         if (reader.runFile(args)){
             reader.changeToPostfix();
+            reader.printPostfix();
+            System.out.println("END READER");
+            
             PostfixTree tree = new PostfixTree(reader);
+
             if (tree.getRoot() == null){
                 System.out.println("It's null");
             }
@@ -29,7 +33,10 @@ public class mainClass{
             for (int i : tree.getAllOperants()) {
                 System.out.print((char) i+", ");
             }
-            
+
+            System.out.println("Go through tree");
+
+            NFA nfa = new NFA(tree);
         }
     }
 }

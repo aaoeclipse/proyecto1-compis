@@ -20,7 +20,11 @@ public class Node<T>{
 
     private int nodeId = 0;
 
-    public Node(){ }
+    public Node(){
+        left_child = null;
+        right_child = null;
+        this.data = null;
+    }
     
     public Node(T data){
         left_child = null;

@@ -19,6 +19,7 @@ public class NFA extends Automata{
 
     public NFA(PostfixTree postfixTree){
         this.postfixTree = postfixTree;
+        Thompson();
     }
 
 
@@ -39,22 +40,24 @@ public class NFA extends Automata{
      *  @return NFA (directional graph)
       */
     private void Thompson(){
+        // postfixTree.getFamilyMemebers();
         // while(postfixTree.unvisited())
             // postfixTree.getBottomLeft()
             // postfixTree.getBrotherRight()
             // postfixTree.getParent()
-        int parent = 0;
+        /* int parent = 0;
         switch ((char) parent){
             case '|':
+
                 break;
             case '*':
                 break;
             case '?':
                 break;
-            case '+':
+            case '&':
                 break;
 
-        }
+        } */
     }
 
     private void createStates(){

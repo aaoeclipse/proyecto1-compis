@@ -23,9 +23,7 @@ public class PostfixTree{
      // Tree Transversal
     private ArrayList<Integer> visitedIds = new ArrayList<>();
     private int nodeId;
-    private Node<Integer> currentLeft;
-    private Node<Integer> currentBrother;
-    private Node<Integer> currentFather;
+
     // For the automata
     private Set<Integer> allSymbols;
     private ArrayList<Integer> allOperants;
@@ -48,38 +46,84 @@ public class PostfixTree{
      */
     private void createTree(){
         Node<Integer> currNode = null;
-        Node<Integer> tempNode;
 
         Stack<Integer> operand = new Stack<>();
+        Stack<Node<Integer>> nodeStack = new Stack<>();
 
         int currChar = reader.readNextChar();
         
         while (currChar != DefaultValues.EOF){
 
+            // it adds the symbol or operand to the stack
             if (DefaultValues.letter.contains(currChar)){
                 allSymbols.add(currChar);
-            }else if (DefaultValues.operators.contains(currChar)){
+            }
+            else if (DefaultValues.operators.contains(currChar)){
                 allOperants.add(currChar);
             }
 
+            // Check if it's an operator
             if (DefaultValues.operators.contains(currChar)){
-                // This means it's an operand
-                // If there are no currNode, it means it has to pop 2 numbers
-                if (currNode == null){
-                    currNode = new Node<>(currChar);
-                    currNode.addRightChild( newNodeId(operand.pop()) );
-                    currNode.addLeftChild( newNodeId(operand.pop()) );
-                }
-                // else if there is a current node then it has to use that node as a left child
-                // and only pop 1 number from the stack 
-                else {
-                    tempNode = currNode;
-                    currNode = newNodeId(currChar);
-                    currNode.addRightChild( newNodeId(operand.pop()));
-                    currNode.addLeftChild(tempNode);
-                }
 
-            } else if (DefaultValues.letter.contains(currChar)){
+                if (currChar == (int) '*'){
+                    // * only needs one
+                    // fist check if operands are empty
+                    if (operand.empty()){
+                        if (nodeStack.empty()){
+                            System.err.println("[-] ERROR PostixTree: createTree. Both stacks are empty");
+                        }else {
+                            // this means that there is a node
+                            currNode = new Node<Integer>(currChar);
+                            currNode.addLeftChild(nodeStack.pop());
+                            currNode.getLeftChild().setParent(currNode);
+
+                            nodeStack.push(currNode);
+                        }
+                    } else {
+                        // This means that the stack of operands is not empty
+                        currNode = new Node<Integer>(currChar);
+                        currNode.addLeftChild( newNodeId( operand.pop() ) );
+                        currNode.getLeftChild().setParent(currNode);
+
+                        nodeStack.push(currNode);
+                    }
+
+                } else {
+                    switch (operand.size()){
+                        case 0:
+                            if (nodeStack.size() < 2){
+                                System.err.println("[-] ERROR PostfixTree: createTree(), operand size == 0 and node stack is less than two");
+                            }
+                            currNode = new Node<Integer> (currChar);
+                            currNode.addRightChild(nodeStack.pop() );
+                            currNode.addLeftChild( nodeStack.pop() );
+                            break;
+
+                        case 1:
+                            if (nodeStack.size() < 1){
+                                System.err.println("[-] ERROR PostfixTree: createTree(), operand size == 0 and node stack is less than 1");
+                            }
+                            currNode = new Node<Integer>(currChar);
+
+                            currNode.addLeftChild( nodeStack.pop() );
+                            currNode.addRightChild(newNodeId( operand.pop()) );
+                            break;
+
+                        default:
+                            currNode = new Node<Integer>(currChar);
+
+                            currNode.addLeftChild( newNodeId( operand.pop() ) );
+                            currNode.addRightChild( newNodeId( operand.pop() ) );
+                            break;
+                    }
+
+                    currNode.getRightChild().setParent(currNode);
+                    currNode.getLeftChild().setParent(currNode);
+
+                    nodeStack.push(currNode);
+                }
+            } // check if letter 
+            else if (DefaultValues.letter.contains(currChar)){
                 operand.push(currChar);
             } else {
                 // Not a valid character
@@ -87,7 +131,6 @@ public class PostfixTree{
             }
             currChar = reader.readNextChar();
         }
-
         this.root = currNode;
     }
 
@@ -99,59 +142,6 @@ public class PostfixTree{
         return this.root;
     }
 
-    /**
-     * Method: complete, checks if there are still unvisited ids.
-     * @return true if no more unvisited 
-     */
-    public boolean complete(){
-        if (this.visitedIds.size() == this.nodeId)
-            return true;
-        return false;
-    }
-
-    public void resetVisited(){
-        this.visitedIds = new ArrayList<>();
-    }
-
-    
-    /** 
-     * getFamilyMembers() gets the bottom left with it's brother
-     *  (if borther not null) and it's parent. Also it checks the
-     *  Visited box for each one
-     */
-    private void getFamilyMemebers(){
-        Node<Integer> tranverse = root;
-        
-        while (tranverse.getLeftChild() != null){
-            // Check if visited left child
-            if (this.visitedIds.contains(tranverse.getLeftChild().getnodeId())){
-                if (tranverse.getRightChild() != null)
-                    tranverse = tranverse.getRightChild();
-                else{
-                    System.out.println("Should break");
-                    break;
-                }
-            }
-            if (tranverse.getLeftChild().getLeftChild() != null)
-                tranverse = tranverse.getLeftChild();
-            else{
-                this.currentFather = tranverse;
-                this.currentBrother = tranverse.getRightChild();
-                this.currentLeft = tranverse.getLeftChild();
-            }
-            visitedIds.add(this.currentLeft.getnodeId());
-            visitedIds.add(this.currentFather.getnodeId());
-            if (currentBrother != null)
-                visitedIds.add(this.currentBrother.getnodeId());
-        }
-
-        
-    }
-
-    // GETTERS for the current nodes
-    public Node<Integer> getBottomLeft(){return this.currentLeft;}
-    public Node<Integer> getBrotherRight(){return this.currentBrother;}
-    public Node<Integer> getParent(){return this.currentFather;}
 
     /**
      * newNodeId: creates a new node with an especific id 
@@ -164,12 +154,17 @@ public class PostfixTree{
         return newNode;
     }
     /**
-     * 
+     * getAllSymbols returns all the symbols
      * @return all symbols 
      */
     public Set<Integer> getAllSymbols(){
         return this.allSymbols;
     }
+
+    /**
+     * getAllSymbols returns all the symbols
+     * @return all Operands 
+     */
     public ArrayList<Integer> getAllOperants(){
         return this.allOperants;
     }

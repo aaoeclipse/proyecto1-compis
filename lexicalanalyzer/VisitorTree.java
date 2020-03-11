@@ -13,7 +13,7 @@ public class VisitorTree{
     // The postfix tree
     private PostfixTree tree;
     // All the nodes that it has visited
-    private Set<Node<Integer>> visited;
+    private Set<Integer> visited;
 
     public VisitorTree(PostfixTree tree){
         System.out.println("New VisitorTree");
@@ -27,30 +27,37 @@ public class VisitorTree{
      * @return returns the node with the next operand 
      */
     public Node<Integer> Next(){
-
         Node<Integer> currNode = tree.getRoot();
-
-        while ( currNode.isLeftChild() ){
-            // check if left child is visited
-            while ( visited.contains( currNode.getLeftChild()) ) {
-                // stop, go to right
-                if ( currNode.hasRightChild() ){
-                    currNode = currNode.getRightChild();
-                } else {
-                    currNode = currNode.getLeftChild();
-                    break;
-                }
-            }
-            currNode = currNode.getLeftChild();
-        }
         
-        // parent of the left most child
-        currNode = currNode.getParent();
+        if (this.visited.size() == this.tree.size()){
+            return null;
+        }
 
-        // Here currNode is the wanted
-        this.visited.add(currNode);
-        System.out.println(this.visited);
-
+        currNode = getLeftmostNode(currNode);
+        this.visited.add(currNode.getnodeId());
         return currNode;
     }
+
+    public Node<Integer> getLeftmostNode(Node<Integer> currNode){
+        if (!currNode.isLeftChild()){
+            return currNode.getParent();
+        } 
+
+        if (this.visited.contains(currNode.getLeftChild().getnodeId())){
+            if (currNode.hasRightChild()){
+                if (this.visited.contains(currNode.getRightChild().getnodeId())){
+                    return currNode;
+                } else{
+                    currNode = getLeftmostNode(currNode.getRightChild());
+                }
+            }
+        }
+
+        else {
+            return getLeftmostNode(currNode.getLeftChild());
+        }
+        
+        return currNode;
+    }
+
 }

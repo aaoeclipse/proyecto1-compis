@@ -23,6 +23,7 @@ public class PostfixTree{
     private Node<Integer> root;
      // Tree Transversal
     private int nodeId;
+    private int operandNodeId;
 
     // For the automata
     private Set<Integer> allSymbols;
@@ -30,6 +31,7 @@ public class PostfixTree{
 
     public PostfixTree(ReadSourceCode reader){
         this.nodeId = 0;
+        this.operandNodeId = -1;
         this.size = 0;
         this.reader = reader;
         this.allSymbols = new HashSet<>();
@@ -76,7 +78,7 @@ public class PostfixTree{
                             System.err.println("[-] ERROR PostixTree: createTree. Both stacks are empty");
                         }else {
                             // this means that there is a node
-                            currNode = new Node<Integer>(currChar);
+                            currNode = newOperandNodeId(currChar);
                             currNode.addLeftChild(nodeStack.pop());
                             currNode.getLeftChild().setParent(currNode);
 
@@ -84,7 +86,7 @@ public class PostfixTree{
                         }
                     } else {
                         // This means that the stack of operands is not empty
-                        currNode = new Node<Integer>(currChar);
+                        currNode = newOperandNodeId(currChar);
                         currNode.addLeftChild( newNodeId( operand.pop() ) );
                         currNode.getLeftChild().setParent(currNode);
 
@@ -97,7 +99,7 @@ public class PostfixTree{
                             if (nodeStack.size() < 2){
                                 System.err.println("[-] ERROR PostfixTree: createTree(), operand size == 0 and node stack is less than two");
                             }
-                            currNode = new Node<Integer> (currChar);
+                            currNode = newOperandNodeId(currChar);
                             currNode.addRightChild(nodeStack.pop() );
                             currNode.addLeftChild( nodeStack.pop() );
                             break;
@@ -106,14 +108,14 @@ public class PostfixTree{
                             if (nodeStack.size() < 1){
                                 System.err.println("[-] ERROR PostfixTree: createTree(), operand size == 0 and node stack is less than 1");
                             }
-                            currNode = new Node<Integer>(currChar);
+                            currNode = newOperandNodeId(currChar);
 
                             currNode.addLeftChild( nodeStack.pop() );
                             currNode.addRightChild(newNodeId( operand.pop()) );
                             break;
 
                         default:
-                            currNode = new Node<Integer>(currChar);
+                            currNode = newOperandNodeId(currChar);
 
                             currNode.addRightChild( newNodeId( operand.pop() ) );
                             currNode.addLeftChild( newNodeId( operand.pop() ) );
@@ -157,6 +159,12 @@ public class PostfixTree{
         this.nodeId++;
         return newNode;
     }
+
+    private Node<Integer> newOperandNodeId(int value){
+        Node<Integer> newNode = new Node<Integer>(value, this.operandNodeId);
+        this.operandNodeId--;
+        return newNode;
+    }
     /**
      * getAllSymbols returns all the symbols
      * @return all symbols 
@@ -174,6 +182,6 @@ public class PostfixTree{
     }
     
     public int size(){
-        return this.size;
+        return -(operandNodeId + 1);
     }
 }

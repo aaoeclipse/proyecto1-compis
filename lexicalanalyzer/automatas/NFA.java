@@ -49,17 +49,12 @@ public class NFA extends Automata{
         System.out.println();
         Node<Integer> currNode = null;  
 
-        System.out.println("1");
-        currNode = this.visitor.Next();
-        System.out.println(currNode);
+        currNode = visitor.Next();
 
-        System.out.println("2");
-        currNode = this.visitor.Next();
-        System.out.println(currNode);
-
-        System.out.println("3");
-        currNode = this.visitor.Next();
-        System.out.println(currNode);
+        while(currNode != null){
+            
+            currNode = visitor.Next();
+       }
 
         /* switch (currNode.getData()){
             case (int) '|':

@@ -6,8 +6,11 @@ Este tiene el data que representa el objeto ya sea statement o algun otro y se p
 
 package lexicalanalyzer.tokens;
 
+import lexicalanalyzer.DefaultValues;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Node<T>{
     
@@ -40,15 +43,9 @@ public class Node<T>{
     }
 
     public boolean isOperand(){
-        switch ((char) this.data) {
-            case '|':
-            case '*':
-            case '+':
-            case '?':
-                return true;
-            default:
-                return false;
-        }
+        if (DefaultValues.operators.contains(this.data))
+            return true;
+        return false;
     }
 
     /* GETTERS */
@@ -117,4 +114,34 @@ public class Node<T>{
     }
 
 
+    public int[] children() {
+        int[] toReturn = new int[2];
+        if (isLeftChild()){
+            if (DefaultValues.operators.contains(getLeftChild().data)){
+
+            }
+        } else {
+            toReturn[0] = 0;
+        }
+        if (hasRightChild()){
+
+        } else {
+            toReturn[1] = 0;
+        }
+
+        return toReturn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node<?> node = (Node<?>) o;
+        return nodeId == node.nodeId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nodeId);
+    }
 }

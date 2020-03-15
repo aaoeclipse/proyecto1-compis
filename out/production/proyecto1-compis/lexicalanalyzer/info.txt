@@ -1,0 +1,3 @@
+Analisis lexico tiene como entrada un conjunto de caracteristicas
+salida: tokens (patrones con atributo)
+Su trabajo es encontrar patrones y pasarlos a tokens

@@ -44,7 +44,6 @@ public class PostfixTree{
      * createTree is the main method in which the reader is going to 
      * send char by char and the tree is going to build the tree
      * while it's being created
-     * @param postfix
      * @return root Node (Tree)
      */
     private void createTree(){
@@ -70,7 +69,7 @@ public class PostfixTree{
             // Check if it's an operator
             if (DefaultValues.operators.contains(currChar)){
 
-                if (currChar == (int) '*'){
+                if (currChar == (int) '*' || currChar == (int) '?' || currChar == (int) '+' ){
                     // * only needs one
                     // fist check if operands are empty
                     if (operand.empty()){

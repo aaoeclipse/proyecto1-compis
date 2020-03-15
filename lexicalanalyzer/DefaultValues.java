@@ -39,5 +39,5 @@ public class DefaultValues {
         }
     };
     public static int EOF = -2;
-    public static int EPSILON = (int) '@';
+    public static int EPSILON = 0;
 }

@@ -4,9 +4,14 @@
  *  File last modified: 11 feb, 2020
  */
 
+import lexicalanalyzer.automatas.equations.State;
+import lexicalanalyzer.automatas.equations.Symbol;
+import lexicalanalyzer.automatas.equations.Transition;
 import lexicalanalyzer.reader.*;
 import lexicalanalyzer.PostfixTree;
 import lexicalanalyzer.automatas.*;
+
+import java.util.ArrayList;
 
 
 public class mainClass{
@@ -40,6 +45,34 @@ public class mainClass{
 
             NFA nfa = new NFA(tree);
 
+            Symbol test = new Symbol();
+            test.symbolAdd((int) 'a');
+            test.symbolAdd((int) 'b');
+            test.symbolAdd((int) 'c');
+            Transition transitionTest = new Transition(test);
+            ArrayList<int[]> rowTest = new ArrayList<>();
+
+            rowTest.add(new int[]{1});
+            rowTest.add(new int[]{-1});
+            rowTest.add(new int[]{-1});
+            rowTest.add(new int[]{2,3,4});
+
+            transitionTest.addRow(rowTest);
+
+            rowTest = new ArrayList<>();
+
+            rowTest.add(new int[]{-1});
+            rowTest.add(new int[]{2});
+            rowTest.add(new int[]{-1});
+            rowTest.add(new int[]{3,4});
+
+            transitionTest.addRow(rowTest);
+
+            State stateTest = new State(0);
+            transitionTest.showPossibleMoves(stateTest);
+            System.out.println(nfa);
+//            System.out.println(transitionTest.testTable());
         }
     }
+
 }

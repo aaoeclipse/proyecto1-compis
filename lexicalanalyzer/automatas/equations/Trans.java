@@ -14,14 +14,22 @@ public class Trans {
         return this.state;
     }
 
+    public int getCharacter() {
+        return character;
+    }
+
+    public State getNextState(){
+        return nextState;
+    }
+
     public int getStateId(){
         return this.state.getId();
     }
 
 
     public Trans(State s, int sym, State sprime){
-        if (sprime == null){
-            System.err.println("Cannnot have a null sprime: " + s + " sym: " + sym);
+        if (sprime == null || s == null){
+            System.err.println("Cannnot have a null s: " + s + " sym: " + sym+ " sprime: " + sprime);
         }
         this.state = s;
         this.character = sym;
@@ -30,14 +38,20 @@ public class Trans {
 
     @Override
     public String toString() {
+        String toReturn = "";
         if (DefaultValues.letter.contains(this.character)){
-            System.out.println(this.character);
-            return "[" + state.getId() + ", " + (char) this.character + ", " + this.nextState.getId() + "]";
+            toReturn += "[" + state.getId() + ", " + (char) this.character + ", " + this.nextState.getId() + "]";
 
         }else{
-            return "[" + state.getId() + ", " + (Integer) this.character + ", " + this.nextState.getId() + "]";
+            toReturn += "[" + state.getId() + ", " + (Integer) this.character + ", " + this.nextState.getId() + "]";
 
         }
+        if(state.getInitialState())
+            toReturn += "(I)";
+        if(nextState.getFinalState())
+            toReturn += "(F)";
+
+        return toReturn;
     }
 
     @Override

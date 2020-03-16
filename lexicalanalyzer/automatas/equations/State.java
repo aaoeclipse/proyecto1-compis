@@ -37,6 +37,13 @@ public class State{
         this.finalState = finalState;
     }
 
+    public boolean getFinalState(){
+        return finalState;
+    }
+    public boolean getInitialState(){
+        return initialState;
+    }
+
     public int getSymbol(){
         return this.symbol;
     }

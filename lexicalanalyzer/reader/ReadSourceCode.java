@@ -60,7 +60,6 @@ public class ReadSourceCode {
     }
 
     /** reads entire file into a matrix for string 
-    * @param String of path file
     * @return true if the file was found */
     public boolean runFile(String[] args){
         // Check if they called the source file while executing the java program
@@ -167,7 +166,6 @@ public class ReadSourceCode {
 
     /**
      * reads next char in postfix and returns its content
-     * @param null
      * @return int of char, -2 if it's end of file (EOF)
      */
     public int readNextChar(){
@@ -180,10 +178,9 @@ public class ReadSourceCode {
 
     /**
      * reads character by character of the file
-     * @param null
      * @return int number of char
      */
-    private int readNextCharInfile(){
+    public int readNextCharInfile(){
         // if end of line change the line 
         if ( positionInLine >= currentLineString.get(currentLinePos).length() ){
             // next line
@@ -204,7 +201,16 @@ public class ReadSourceCode {
     }
 
     private void printUse(){
-        System.out.println("[*] Please use $java main [name of file]");
+        System.out.println("[*] Please use $java main [OPTION] [automata] [name of file]");
+
+        System.out.println("-- AUTOMATA --");
+        System.out.println("-nfa");
+        System.out.println("-dfa");
+        System.out.println("-dfa2");
+
+        System.out.println("-- OPTIONS --");
+        System.out.println("-b\tbuild the automata to run");
+        System.out.println("-s\tsimulate");
     }
 
 

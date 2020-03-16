@@ -35,6 +35,7 @@ public class VisitorTree{
 
         currNode = getLeftmostNode(currNode);
         this.visited.add(currNode.getnodeId());
+
         return currNode;
     }
 

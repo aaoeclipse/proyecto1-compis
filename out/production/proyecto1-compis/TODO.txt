@@ -12,6 +12,6 @@ TO-DO List
 ✔  Transform to postfix tree
 ✔  Tree visitor
 *  NFA
-*  Thompson
+✔  Thompson
 ✘  DFA
 ✘  DFA v2

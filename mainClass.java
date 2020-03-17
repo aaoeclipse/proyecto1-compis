@@ -54,7 +54,7 @@ public class mainClass{
             test[0] = "runner.txt";
             if (reader.runFile(test)) {
                 boolean isit = nfa.Simulate(reader);
-                System.out.println("is it? " + isit);
+                System.out.println("NFA RESULT = " + isit);
             }
 
         }

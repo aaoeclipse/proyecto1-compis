@@ -76,7 +76,25 @@ public class NFA extends Automata{
         return false;
     }
 
-    private State getStartingState() {
+
+    /**
+     * Works by getting all the reachable staets with an epsilon
+     * @param s
+     * @return
+     */
+    public ArrayList<State> epsilonClosure(State s) {
+        ArrayList<State> states = new ArrayList<>();
+        for (Trans t: this.transitionTable) {
+            if (t.getState().getId() == s.getId()){
+                if (t.getCharacter() == DefaultValues.EPSILON){
+
+                }
+            }
+        }
+        return states;
+    }
+
+    public State getStartingState() {
         for (State[] ss:allStates) {
             for (State s: ss) {
                 if (s.getInitialState()){
@@ -87,7 +105,7 @@ public class NFA extends Automata{
         return null;
     }
 
-    private State mover(State s, int c) {
+    public State mover(State s, int c) {
         State temp;
         for (Trans t: this.transitionTable){
             if (t.getState().getId() == s.getId()){
@@ -322,6 +340,10 @@ public class NFA extends Automata{
             }
         }
         return s;
+    }
+
+    public ArrayList<State[]> getAllStates(){
+        return this.allStates;
     }
 
     /**

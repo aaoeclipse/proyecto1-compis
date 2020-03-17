@@ -1,9 +1,11 @@
 FIXING:
-* ? means 1 or 0
-* + means at least 1
+* (ab)|c me da igual que ab|c
+
 
 FIXED:
 ✔ No implementation for concat. example; ab, the parser before postfix has to add a plus sign
+✔ ? means 1 or 0
+✔ + means at least 1
 
 TO-DO List
 ✔  Read file
@@ -11,7 +13,7 @@ TO-DO List
 ✔  Parse to postfix
 ✔  Transform to postfix tree
 ✔  Tree visitor
-*  NFA
+✔  NFA
 ✔  Thompson
-✘  DFA
+*  DFA
 ✘  DFA v2

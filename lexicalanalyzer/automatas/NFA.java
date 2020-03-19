@@ -292,6 +292,7 @@ public class NFA extends Automata{
             getStates(currNode,"left");
 
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, this.allStates.get(this.numArrayState)[0]));
+
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, states[1]));
 
             this.transitionTable.add(new Trans(this.allStates.get(this.numArrayState)[this.allStates.get(this.numArrayState).length-1], DefaultValues.EPSILON, this.allStates.get(this.numArrayState)[0]));
@@ -301,9 +302,8 @@ public class NFA extends Automata{
 
             this.transitionTable.add(new Trans(states[0],DefaultValues.EPSILON,states[1]));
             this.transitionTable.add(new Trans(states[0],(Integer) currNode.getLeftChild().getData(),states[0]));
+
         }
-        System.out.println(states[0]);
-        System.out.println(states[1]);
         this.allStates.add(states);
     }
 
@@ -336,7 +336,7 @@ public class NFA extends Automata{
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, operandLeft[0]));
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, operandRight[0]));
             this.transitionTable.add(new Trans(operandLeft[1], DefaultValues.EPSILON, states[1]));
-            this.transitionTable.add(new Trans(operandRight[0], DefaultValues.EPSILON, states[1]));
+            this.transitionTable.add(new Trans(operandRight[1], DefaultValues.EPSILON, states[1]));
 
 
         } else if (states.length == 4){
@@ -431,55 +431,69 @@ public class NFA extends Automata{
                 State[] operandLeft = getStates(currNode, "left");
                 State[] operandRight = getStates(currNode, "right");
 
-                states = createStates(1);
+                states = createStates(2);
                 states[0].setSymbol(currNode.getnodeId());
 
+
+                this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, operandLeft[0]));
+
                 this.transitionTable.add(new Trans(operandLeft[1], DefaultValues.EPSILON, operandRight[0]));
-                this.transitionTable.add(new Trans(operandRight[0], DefaultValues.EPSILON, states[0]));
+
+                this.transitionTable.add(new Trans(operandRight[0], DefaultValues.EPSILON, states[1]));
 
                 states[0].setSymbol(currNode.getnodeId());
 
                 removeFinalPoints();
-                states[0].setFinalState(true);
+                removeStartingPoint();
+                states[1].setFinalState(true);
+                states[0].setInitialState(true);
 
             }else{
                 // LEFT is operation
-                states = createStates(2);
+                states = createStates(3);
                 State[] operandLeft = getStates(currNode, "left");
 
                 states[0].setSymbol(currNode.getnodeId());
 
                 removeFinalPoints();
-                states[1].setFinalState(true);
+                states[2].setFinalState(true);
 
-                this.transitionTable.add(new Trans(operandLeft[0], DefaultValues.EPSILON, states[0]));
+                this.transitionTable.add(new Trans(operandLeft[1], DefaultValues.EPSILON, states[0]));
                 this.transitionTable.add(new Trans(states[0], (Integer) currNode.getRightChild().getData(), states[1]));
+                this.transitionTable.add(new Trans(states[1], DefaultValues.EPSILON, states[2]));
 
             }
         } else if (currNode.getRightChild().isOperand()){
             // RIGHT is operation
-            states = createStates(2);
+            states = createStates(3);
             states[0].setSymbol(currNode.getnodeId());
 
             State[]  operandRight= getStates(currNode, "right");
 
-            this.transitionTable.add(new Trans(states[0], (Integer) currNode.getRightChild().getData(), states[1]));
-            this.transitionTable.add(new Trans(states[1], DefaultValues.EPSILON, operandRight[0]));
+            this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, states[1]));
+
+            this.transitionTable.add(new Trans(states[1], (Integer) currNode.getLeftChild().getData(), states[2]));
+            this.transitionTable.add(new Trans(states[2], DefaultValues.EPSILON, operandRight[0]));
 
             removeStartingPoint();
-            states[0].setFinalState(true);
+            states[0].setInitialState(true);
 
         } else{
             // NO OPERATIONS
-            states = createStates(5);
+            states = createStates(6);
             states[0].setSymbol(currNode.getnodeId());
             states[0].setInitialState(true);
             states[states.length-1].setFinalState(true);
+
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, states[1]));
             this.transitionTable.add(new Trans(states[1], (Integer) currNode.getLeftChild().getData(), states[2]));
-            this.transitionTable.add(new Trans(states[2], (Integer) currNode.getRightChild().getData(), states[3]));
-            this.transitionTable.add(new Trans(states[3], DefaultValues.EPSILON, states[4]));
+
+            this.transitionTable.add(new Trans(states[2], DefaultValues.EPSILON, states[3]));
+
+            this.transitionTable.add(new Trans(states[3], (Integer) currNode.getRightChild().getData(), states[4]));
+            this.transitionTable.add(new Trans(states[4], DefaultValues.EPSILON, states[5]));
         }
+
         this.allStates.add(states);
     }
 

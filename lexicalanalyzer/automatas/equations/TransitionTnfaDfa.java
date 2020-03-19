@@ -58,37 +58,27 @@ public class TransitionTnfaDfa {
     }
 
     public int mover(int dfa, int c) {
-        System.out.println("Symbol Table");
-        for (int[] i: symbolsTable) {
-            for (int ii:i
-                 ) {
-                System.out.println(ii);
-
-            }
-        }
         int nextState = -1;
         if (dfa < 0)
             dfa = this.DFAids.get(0);
-        System.out.println("DFA: " + (char) dfa);
-        System.out.println();
+
         // 65
         int rowDFA = dfa-65;
 
         int column = -1;
         for (int i = 0; i < symHeader.size(); i++) {
-            System.out.println("trying move: " + symHeader.get(i) + " == " + c);
             if (symHeader.get(i) == c){
-                System.out.println("SUCCESS");
                 column = i;
             }
         }
 
-        if (column == -1)
+        if (column < 0)
             return -1;
-
-        System.out.println(symbolsTable.get(rowDFA)[column]);
+//        System.out.println(symbolsTable.get(rowDFA)[column]);
         nextState = getDfaName(symbolsTable.get(rowDFA)[column]);
-        System.out.println(": Moving -> " + (char) nextState);
+
+        if (nextState == 63)
+            nextState = -1;
         return nextState;
     }
 
@@ -157,12 +147,14 @@ public class TransitionTnfaDfa {
         test += "\n";
         int counter = 0;
         for (int[] i :symbolsTable) {
+
             if (dfaInitialStates.contains(DFAids.get(counter)))
                 test += getDfaName(counter++) + "  I [";
             else
                 test += getDfaName(counter++) + "    [";
-            for (int j = 0; j < DFAids.size(); j++) {
-                test += getDfaName(j) + ", ";
+
+            for (int j = 0; j < i.length; j++) {
+                test += getDfaName(symbolsTable.get(counter-1)[j])+ ", " ;
             }
             if (this.dfaFinalStates.contains(DFAids.get(counter-1)))
                 test += "] F\n";
@@ -180,10 +172,8 @@ public class TransitionTnfaDfa {
     }
 
     private char getDfaName(int i) {
-        System.out.println("Trying to use index: " + i);
-        System.out.println("while DFA is: ");
         if (i==-1){
-            return (char) 0;
+            return '?';
         }
         for (int id:DFAids
              ) {

@@ -44,9 +44,12 @@ public class VisitorTree{
             return currNode.getParent();
         } 
 
-        if (this.visited.contains(currNode.getLeftChild().getnodeId())){
+        if (this.visited.contains(currNode.getLeftChild().getnodeId()) || DefaultValues.letter.contains(currNode.getLeftChild().getData())){
+
+            // Aqui hay dos posibilidades, o el hijo izquierdo es una letra o ya fue visitado
+
             if (currNode.hasRightChild()){
-                if (this.visited.contains(currNode.getRightChild().getnodeId())){
+                if (this.visited.contains(currNode.getRightChild().getnodeId()) || DefaultValues.letter.contains(currNode.getRightChild().getData())){
                     return currNode;
                 } else{
                     currNode = getLeftmostNode(currNode.getRightChild());

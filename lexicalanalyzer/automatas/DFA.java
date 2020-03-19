@@ -43,7 +43,8 @@ public class DFA extends Automata{
         System.out.println("c: " + (char) c + " s: " + currState);
 
         while ( c != DefaultValues.EOF && currState != -1) {
-            currState = transitionTable.mover(currState,c);
+            currState = transitionTable.mover(currState, c);
+
             c = reader.readNextCharInfile();
         }
         if (currState == -1){
@@ -92,11 +93,7 @@ public class DFA extends Automata{
             if (addToArray(closureState)){
 
                 for (State ns: closureState){
-                    System.out.print("Movement on: ");
-                    System.out.println(ns);
-
                     for (int i: symbols) {
-                        System.out.println("with : " + (char) i);
                         curr = nfa.moverNoEpsilon(ns, i);
 
                         if(curr != null){

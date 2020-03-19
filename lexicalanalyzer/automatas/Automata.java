@@ -12,7 +12,6 @@ import java.util.Set;
 
 public class Automata {
     protected Set<State> states;
-    protected Transition transitions;
     protected Symbol symbols;
     protected State initialState;
     protected Set<State> finalStates;

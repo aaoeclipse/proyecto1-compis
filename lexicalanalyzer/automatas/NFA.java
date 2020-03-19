@@ -16,6 +16,7 @@ import lexicalanalyzer.DefaultValues;
 import lexicalanalyzer.PostfixTree;
 import lexicalanalyzer.VisitorTree;
 import lexicalanalyzer.automatas.equations.State;
+import lexicalanalyzer.automatas.equations.Symbol;
 import lexicalanalyzer.automatas.equations.Trans;
 import lexicalanalyzer.reader.ReadSourceCode;
 import lexicalanalyzer.tokens.Node;
@@ -23,7 +24,6 @@ import lexicalanalyzer.tokens.Node;
 
 public class NFA extends Automata{
     
-    private Stack<Node<Integer>> nodeStack;
     private VisitorTree visitor;
     private PostfixTree postfixTree;
     private int counterId;
@@ -82,11 +82,23 @@ public class NFA extends Automata{
      * @param s
      * @return
      */
-    public ArrayList<State> epsilonClosure(State s) {
-        ArrayList<State> states = new ArrayList<>();
+    public Set<State> epsilonClosure(State s) {
+        Set<State> states = new HashSet<>();
+
         for (Trans t: this.transitionTable) {
+
             if (t.getState().getId() == s.getId()){
+
                 if (t.getCharacter() == DefaultValues.EPSILON){
+
+                    states.add(t.getNextState());
+
+                    Set<State> newStates = epsilonClosure(t.getNextState());
+
+                    for (State ns: newStates ) {
+
+                        states.add(ns);
+                    }
 
                 }
             }
@@ -105,6 +117,27 @@ public class NFA extends Automata{
         return null;
     }
 
+    public int getInitialId() {
+        for (State[] ss:allStates) {
+            for (State s: ss) {
+                if (s.getInitialState()){
+                    return s.getId();
+                }
+            }
+        }
+        return -1;
+    }
+    public int getFinalState() {
+        for (State[] ss:allStates) {
+            for (State s: ss) {
+                if (s.getFinalState()){
+                    return s.getId();
+                }
+            }
+        }
+        return -1;
+    }
+
     public State mover(State s, int c) {
         State temp;
         for (Trans t: this.transitionTable){
@@ -117,13 +150,27 @@ public class NFA extends Automata{
                         return temp;
 
                 } else if (t.getCharacter() == c){
-                    System.out.println("Moving "+ s.getId() +"-> " + t.getNextState());
+//                    System.out.println("Moving "+ s.getId() +"-> " + t.getNextState());
                     return t.getNextState();
 
                 }
             }
         }
-        System.out.println("NULL -> " + s + " " + (char) c );
+//        System.out.println("NULL -> " + s + " " + (char) c );
+
+        return null;
+    }
+
+    public State moverNoEpsilon(State s, int c) {
+        for (Trans t: this.transitionTable){
+            if (t.getState().getId() == s.getId()){
+
+                if (t.getCharacter() == c){
+                    return t.getNextState();
+
+                }
+            }
+        }
 
         return null;
     }
@@ -169,12 +216,24 @@ public class NFA extends Automata{
         if (currNode.getLeftChild().isOperand()){
             states = createStates(1);
             states[0].setSymbol(currNode.getnodeId());
+
+            removeFinalPoints();
+
+            states[0].setFinalState(true);
+
             this.transitionTable.add(new Trans(getStates(currNode,"left")[0], DefaultValues.EPSILON, states[0]));
             this.transitionTable.add(new Trans(getStates(currNode,"left")[1], DefaultValues.EPSILON, states[0]));
 
         }else{
             states = createStates(3);
             states[0].setSymbol(currNode.getnodeId());
+
+            removeFinalPoints();
+            removeStartingPoint();
+
+            states[2].setFinalState(true);
+            states[0].setInitialState(true);
+
             this.transitionTable.add(new Trans(states[0], (Integer) currNode.getLeftChild().getData(), states[1]));
             this.transitionTable.add(new Trans(states[1], DefaultValues.EPSILON, states[2]));
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, states[2]));
@@ -190,12 +249,24 @@ public class NFA extends Automata{
             states = createStates(2);
             states[0].setSymbol(currNode.getnodeId());
 
+            removeFinalPoints();
+            removeStartingPoint();
+
+            states[1].setFinalState(true);
+            states[0].setInitialState(true);
+
             this.transitionTable.add(new Trans(getStates(currNode,"left")[1], DefaultValues.EPSILON, states[0]));
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, getStates(currNode,"left")[0]));
             this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, states[1]));
         } else {
             states = createStates(3);
             states[0].setSymbol(currNode.getnodeId());
+
+            removeFinalPoints();
+            removeStartingPoint();
+
+            states[2].setFinalState(true);
+            states[0].setInitialState(true);
 
             this.transitionTable.add(new Trans(states[0], (Integer) currNode.getLeftChild().getData(), states[1]));
             this.transitionTable.add(new Trans(states[1], DefaultValues.EPSILON, states[2]));
@@ -355,6 +426,7 @@ public class NFA extends Automata{
 
         if(currNode.getLeftChild().isOperand()){
             if (currNode.getRightChild().isOperand()){
+
                 // LEFT AND RIGHT is operation
                 State[] operandLeft = getStates(currNode, "left");
                 State[] operandRight = getStates(currNode, "right");
@@ -390,14 +462,23 @@ public class NFA extends Automata{
             states[0].setSymbol(currNode.getnodeId());
 
             State[]  operandRight= getStates(currNode, "right");
+
             this.transitionTable.add(new Trans(states[0], (Integer) currNode.getRightChild().getData(), states[1]));
             this.transitionTable.add(new Trans(states[1], DefaultValues.EPSILON, operandRight[0]));
+
+            removeStartingPoint();
+            states[0].setFinalState(true);
+
         } else{
             // NO OPERATIONS
-            states = createStates(3);
+            states = createStates(5);
             states[0].setSymbol(currNode.getnodeId());
-            this.transitionTable.add(new Trans(states[0], (Integer) currNode.getLeftChild().getData(), states[1]));
-            this.transitionTable.add(new Trans(states[1], (Integer) currNode.getRightChild().getData(), states[2]));
+            states[0].setInitialState(true);
+            states[states.length-1].setFinalState(true);
+            this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, states[1]));
+            this.transitionTable.add(new Trans(states[1], (Integer) currNode.getLeftChild().getData(), states[2]));
+            this.transitionTable.add(new Trans(states[2], (Integer) currNode.getRightChild().getData(), states[3]));
+            this.transitionTable.add(new Trans(states[3], DefaultValues.EPSILON, states[4]));
         }
         this.allStates.add(states);
     }
@@ -453,6 +534,10 @@ public class NFA extends Automata{
                 s.setFinalState(false);
             }
         }
+    }
+
+    public Set<Integer> getAllSymbols(){
+        return this.postfixTree.getAllSymbols();
     }
 
 }

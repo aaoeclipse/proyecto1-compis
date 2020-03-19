@@ -4,15 +4,13 @@
  *  File last modified: 11 feb, 2020
  */
 
-import lexicalanalyzer.automatas.equations.State;
-import lexicalanalyzer.reader.*;
 import lexicalanalyzer.PostfixTree;
-import lexicalanalyzer.automatas.*;
+import lexicalanalyzer.automatas.DFA;
+import lexicalanalyzer.automatas.NFA;
+import lexicalanalyzer.reader.ReadSourceCode;
 
-import java.util.Set;
 
-
-public class mainClass{
+public class DfaToNfa {
     public static void main(String... args){
         ReadSourceCode reader = new ReadSourceCode();
         // Open File
@@ -44,7 +42,7 @@ public class mainClass{
             NFA nfa = new NFA(tree);
             System.out.println(nfa);
 
-            // Simulating NFA
+            // Simulating
             System.out.println("SIMULATING");
             reader = new ReadSourceCode();
             String[] test = new String[1];
@@ -56,20 +54,6 @@ public class mainClass{
                 System.out.println("====== DFA =========");
                 DFA dfa = new DFA();
                 dfa.NFAtoDFA(nfa);
-                for (Set<State> s:dfa.states) {
-                    System.out.println(s);
-                }
-                System.out.println("SIMULATING");
-                reader = new ReadSourceCode();
-                test = new String[1];
-                test[0] = "runner.txt";
-                if (reader.runFile(test)){
-                    isit = dfa.Simulate(reader);
-                    System.out.println("DFA RESULT = " + isit);
-                }
-
-
-
             }
 
         }

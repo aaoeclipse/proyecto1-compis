@@ -5,7 +5,6 @@ import lexicalanalyzer.automatas.equations.*;
 
 public class Test{
     public static void main(String... args){
-        Transition transitionTest;
         Symbol symbols = new Symbol();
         Set<State> states = new HashSet<>();
 
@@ -17,6 +16,5 @@ public class Test{
             states.add(new State(j));
         }
 
-        transitionTest = new Transition(symbols, states);
     }
 }

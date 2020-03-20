@@ -113,7 +113,8 @@ public class PostfixTree{
                             {
                                 currNode.addRightChild( nodeStack.pop() );
                                 currNode.addLeftChild(newNodeId( operand.pop()) );
-                            }else {
+                            }else
+                                {
                                 currNode.addLeftChild( nodeStack.pop() );
                                 currNode.addRightChild(newNodeId( operand.pop()) );
                             }

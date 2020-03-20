@@ -88,8 +88,6 @@ public class DFA extends Automata{
             return closureState;
 
         } else {
-            // Se agrega el state que se encuentra?
-
             if (addToArray(closureState)){
 
                 for (State ns: closureState){

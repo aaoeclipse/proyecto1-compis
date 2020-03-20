@@ -35,6 +35,9 @@ public class DefaultValues {
                 // LOWER CASE
                 add(97+i);
             }
+            for (int i=0; i<10;i++){
+                add(48+i);
+            }
             add(EPSILON);        
         }
     };

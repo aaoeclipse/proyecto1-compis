@@ -214,15 +214,18 @@ public class NFA extends Automata{
     private void caseZeroOrOne(Node<Integer> currNode) {
         State[] states = null;
         if (currNode.getLeftChild().isOperand()){
-            states = createStates(1);
+            states = createStates(2);
             states[0].setSymbol(currNode.getnodeId());
 
             removeFinalPoints();
+            removeStartingPoint();
 
-            states[0].setFinalState(true);
+            states[1].setFinalState(true);
+            states[0].setInitialState(true);
 
-            this.transitionTable.add(new Trans(getStates(currNode,"left")[0], DefaultValues.EPSILON, states[0]));
-            this.transitionTable.add(new Trans(getStates(currNode,"left")[1], DefaultValues.EPSILON, states[0]));
+            this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, getStates(currNode,"left")[0]));
+            this.transitionTable.add(new Trans(getStates(currNode,"left")[0], DefaultValues.EPSILON, states[1]));
+            this.transitionTable.add(new Trans(getStates(currNode,"left")[1], DefaultValues.EPSILON, states[1]));
 
         }else{
             states = createStates(3);
@@ -361,7 +364,6 @@ public class NFA extends Automata{
                 this.transitionTable.add(new Trans(states[1], (Integer) currNode.getLeftChild().getData(), states[2]));
                 this.transitionTable.add(new Trans(operandRight[1], DefaultValues.EPSILON, states[3]));
                 this.transitionTable.add(new Trans(states[2], DefaultValues.EPSILON, states[3]));
-
             }
 
         } else {
@@ -379,6 +381,7 @@ public class NFA extends Automata{
 
         removeFinalPoints();
         removeStartingPoint();
+
         states[0].setInitialState(true);
         states[states.length-1].setFinalState(true);
 
@@ -439,33 +442,38 @@ public class NFA extends Automata{
 
                 this.transitionTable.add(new Trans(operandLeft[1], DefaultValues.EPSILON, operandRight[0]));
 
-                this.transitionTable.add(new Trans(operandRight[0], DefaultValues.EPSILON, states[1]));
+                this.transitionTable.add(new Trans(operandRight[1], DefaultValues.EPSILON, states[1]));
 
                 states[0].setSymbol(currNode.getnodeId());
 
                 removeFinalPoints();
                 removeStartingPoint();
+
                 states[1].setFinalState(true);
                 states[0].setInitialState(true);
 
             }else{
                 // LEFT is operation
-                states = createStates(3);
+
+                states = createStates(4);
                 State[] operandLeft = getStates(currNode, "left");
 
                 states[0].setSymbol(currNode.getnodeId());
 
+                removeStartingPoint();
                 removeFinalPoints();
                 states[2].setFinalState(true);
+                states[0].setInitialState(true);
 
-                this.transitionTable.add(new Trans(operandLeft[1], DefaultValues.EPSILON, states[0]));
-                this.transitionTable.add(new Trans(states[0], (Integer) currNode.getRightChild().getData(), states[1]));
-                this.transitionTable.add(new Trans(states[1], DefaultValues.EPSILON, states[2]));
+                this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, operandLeft[0]));
+                this.transitionTable.add(new Trans(operandLeft[1], DefaultValues.EPSILON, states[1]));
+                this.transitionTable.add(new Trans(states[1], (Integer) currNode.getRightChild().getData(), states[2]));
+                this.transitionTable.add(new Trans(states[2], DefaultValues.EPSILON, states[3]));
 
             }
         } else if (currNode.getRightChild().isOperand()){
             // RIGHT is operation
-            states = createStates(3);
+            states = createStates(4);
             states[0].setSymbol(currNode.getnodeId());
 
             State[]  operandRight= getStates(currNode, "right");
@@ -474,14 +482,22 @@ public class NFA extends Automata{
 
             this.transitionTable.add(new Trans(states[1], (Integer) currNode.getLeftChild().getData(), states[2]));
             this.transitionTable.add(new Trans(states[2], DefaultValues.EPSILON, operandRight[0]));
+            this.transitionTable.add(new Trans(operandRight[1], DefaultValues.EPSILON, states[3]));
+
 
             removeStartingPoint();
+            removeFinalPoints();
             states[0].setInitialState(true);
+            states[3].setFinalState(true);
 
         } else{
             // NO OPERATIONS
             states = createStates(6);
             states[0].setSymbol(currNode.getnodeId());
+
+            removeStartingPoint();
+            removeFinalPoints();
+
             states[0].setInitialState(true);
             states[states.length-1].setFinalState(true);
 

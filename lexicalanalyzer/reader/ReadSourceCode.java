@@ -99,7 +99,6 @@ public class ReadSourceCode {
     }
 
     /** change the string to postfix
-     * @param null
      * @return creates the this.postfix
       */
     public void changeToPostfix(){

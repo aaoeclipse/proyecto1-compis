@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TransitionTnfaDfa {
+
     private ArrayList<Set<Integer>> NFAids;
     private ArrayList<Integer> DFAids;
     private ArrayList<int[]> symbolsTable;
@@ -168,6 +169,7 @@ public class TransitionTnfaDfa {
                 "" + test +
                 ", numOfSym=" + numOfSym +
                 ", currName=" + currName +
+                ", finalState="+finalState+
                 '}';
     }
 

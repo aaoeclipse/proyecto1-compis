@@ -111,8 +111,8 @@ public class PostfixTree{
 
                             if (nodeStack.peek().getData() == (int) '*' || nodeStack.peek().getData() == (int) '?' || nodeStack.peek().getData() == (int) '+' )
                             {
-                                currNode.addRightChild( nodeStack.pop() );
-                                currNode.addLeftChild(newNodeId( operand.pop()) );
+                                currNode.addLeftChild( nodeStack.pop() );
+                                currNode.addRightChild(newNodeId( operand.pop()) );
                             }else
                                 {
                                 currNode.addLeftChild( nodeStack.pop() );

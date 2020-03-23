@@ -94,6 +94,10 @@ public class TransitionTnfaDfa {
     }
 
 
+    /**
+     * it adds the given set of states into the NFA id's list. it also adds a new DFA state
+     * @param nfaS
+     */
     public void addNfaDfa(Set<State> nfaS){
         Set<Integer> nfa = setToInt(nfaS);
 
@@ -106,8 +110,10 @@ public class TransitionTnfaDfa {
         for (int i = 0; i < toAdd.length; i++) {
             toAdd[i] = -1;
         }
+        // Adds it on the symbol table (new row)
         symbolsTable.add(toAdd);
 
+        // The initial state is the starting state
         if (first){
             first = false;
             dfaInitialStates.add(65);
@@ -117,6 +123,7 @@ public class TransitionTnfaDfa {
     public void addTransition(Set<State> nfas, int character, Set<State> dfas){
         Set<Integer> nfa = setToInt(nfas);
         Set<Integer> dfa = setToInt(dfas);
+
 
         for (int row = 0; row < NFAids.size(); row++) {
             if (NFAids.get(row).equals(nfa)){
@@ -128,10 +135,13 @@ public class TransitionTnfaDfa {
     private void addTable(int row, int character, Set<Integer> dfa) {
         if (dfa.size() == 0){
             symbolsTable.get(row)[charToPosition(character)] = -1;
+            System.out.println("RETURNING ADD TABLE");
             return;
         }
         for (int finalRow = 0; finalRow < NFAids.size(); finalRow++) {
             if (NFAids.get(finalRow).equals(dfa)){
+//                System.out.println("adding: " + getDfaName(row) + " -" + (char) character + "-> " + getDfaName(finalRow));
+
                 symbolsTable.get(row)[charToPosition(character)] = finalRow;
             }
         }
@@ -176,10 +186,6 @@ public class TransitionTnfaDfa {
     private char getDfaName(int i) {
         if (i==-1){
             return '?';
-        }
-        for (int id:DFAids
-             ) {
-            System.out.print(id+", ");
         }
         int test= DFAids.get(i);
         return (char) test;

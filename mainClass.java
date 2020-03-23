@@ -56,9 +56,7 @@ public class mainClass{
                 System.out.println("====== DFA =========");
                 DFA dfa = new DFA();
                 dfa.NFAtoDFA(nfa);
-                for (Set<State> s:dfa.states) {
-                    System.out.println(s);
-                }
+
                 System.out.println("SIMULATING");
                 reader = new ReadSourceCode();
                 test = new String[1];

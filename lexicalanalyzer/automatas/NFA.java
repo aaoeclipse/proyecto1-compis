@@ -48,7 +48,7 @@ public class NFA extends Automata{
          int c = reader.readNextCharInfile();
 
          State s = getStartingState();
-        System.out.println("c: " + (char) c + " s: " + s);
+         System.out.println("c: " + (char) c + " s: " + s);
          while ( c != DefaultValues.EOF && s != null) {
              s = mover(s,c);
              c = reader.readNextCharInfile();
@@ -59,6 +59,11 @@ public class NFA extends Automata{
          return (s.getFinalState() || epsilonToEnd(s));
     }
 
+    /**
+     * Checks if the end state is after epsilon
+     * @param s
+     * @return
+     */
     private boolean epsilonToEnd(State s) {
         for (Trans t: this.transitionTable) {
             if (t.getState().getId() == s.getId()){
@@ -69,7 +74,6 @@ public class NFA extends Automata{
                         if (epsilonToEnd(t.getNextState()))
                             return true;
                     }
-
                 }
             }
         }
@@ -86,13 +90,10 @@ public class NFA extends Automata{
         Set<State> states = new HashSet<>();
 
         for (Trans t: this.transitionTable) {
-
             if (t.getState().getId() == s.getId()){
-
                 if (t.getCharacter() == DefaultValues.EPSILON){
 
                     states.add(t.getNextState());
-
                     Set<State> newStates = epsilonClosure(t.getNextState());
 
                     for (State ns: newStates ) {
@@ -162,6 +163,7 @@ public class NFA extends Automata{
     }
 
     public State moverNoEpsilon(State s, int c) {
+
         for (Trans t: this.transitionTable){
             if (t.getState().getId() == s.getId()){
 
@@ -173,6 +175,17 @@ public class NFA extends Automata{
         }
 
         return null;
+    }
+
+    public Set<State> moverNoEpsilonSet(State s, int c) {
+        Set<State> toReturn = new HashSet<>();
+        for (Trans t: this.transitionTable){
+            if (t.getState().getId() == s.getId())
+                if (t.getCharacter() == c)
+                    toReturn.add(t.getNextState());
+        }
+
+        return toReturn;
     }
 
 
@@ -462,7 +475,7 @@ public class NFA extends Automata{
 
                 removeStartingPoint();
                 removeFinalPoints();
-                states[2].setFinalState(true);
+                states[3].setFinalState(true);
                 states[0].setInitialState(true);
 
                 this.transitionTable.add(new Trans(states[0], DefaultValues.EPSILON, operandLeft[0]));
@@ -570,4 +583,16 @@ public class NFA extends Automata{
         return this.postfixTree.getAllSymbols();
     }
 
+    public Set<State> mov(Set<State> closureState, int c) {
+        State curr;
+        Set<State> toReturn = new HashSet<>();
+
+        for (State s: closureState) {
+            curr = moverNoEpsilon(s,c);
+
+            if (curr != null)
+                toReturn.add(curr);
+        }
+        return toReturn;
+    }
 }

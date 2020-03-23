@@ -5,16 +5,14 @@ import lexicalanalyzer.PostfixTree;
 import lexicalanalyzer.VisitorTree;
 import lexicalanalyzer.automatas.equations.State;
 import lexicalanalyzer.automatas.equations.Trans;
-import java.util.Arrays;
+
+import java.util.*;
 
 import lexicalanalyzer.automatas.equations.TransitionTnfaDfa;
 import lexicalanalyzer.reader.ReadSourceCode;
 import lexicalanalyzer.tokens.Node;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class DFA extends Automata{
     private NFA nfa;
@@ -25,6 +23,8 @@ public class DFA extends Automata{
 
     private PostfixTree tree;
     private VisitorTree visitor;
+    private Queue<Set<State>> queue;
+
 
     public DFA(){
 
@@ -40,7 +40,6 @@ public class DFA extends Automata{
         int c = reader.readNextCharInfile();
 
         int currState = -2;
-        System.out.println("c: " + (char) c + " s: " + currState);
 
         while ( c != DefaultValues.EOF && currState != -1) {
             currState = transitionTable.mover(currState, c);
@@ -58,30 +57,41 @@ public class DFA extends Automata{
     }
 
 
-
+    /**
+     * it's given a nfa and it transform it to a dfa
+     * @param nfa
+     */
     public void NFAtoDFA(NFA nfa){
+        queue = new LinkedList<>();
+        // Set variables
         states = new ArrayList<>();
         Set<State> currCosure = new HashSet<>();
-
         this.nfa = nfa;
         symbols = nfa.getAllSymbols();
-
+        // initiate the transition table
         this.transitionTable = new TransitionTnfaDfa(symbols, nfa.getFinalState(), nfa.getInitialId());
-
+        // get the initial state
         State s = nfa.getStartingState();
 
-        getAllClosures(s);
+        // fill the table of transition (DFA)
+        getAllClosures2(s);
 
-        System.out.println(transitionTable);
-
+        // debug
+         System.out.println(transitionTable);
     }
 
+    /**
+     * It fills the transition table. It goes through the closures-epsilon, then it goes with all the values in which
+     * it can move and then it calls itself for the same process.
+     * @param s
+     * @return
+     */
     private Set<State> getAllClosures(State s){
         Set<State> closureState = new HashSet<>();
-
         State curr;
-
+//        System.out.println("State: " + s);
         closureState = nfa.epsilonClosure(s);
+//        System.out.println("Closure State { " + closureState + "}");
 
 
         if (closureState.isEmpty()){
@@ -90,8 +100,9 @@ public class DFA extends Automata{
         } else {
             if (addToArray(closureState)){
 
-                for (State ns: closureState){
-                    for (int i: symbols) {
+                for (int i: symbols){
+                    for (State ns: closureState) {
+//                        System.out.println("Trying to move: " + (char) i + " of state: " + ns.getId());
                         curr = nfa.moverNoEpsilon(ns, i);
 
                         if(curr != null){
@@ -105,14 +116,71 @@ public class DFA extends Automata{
         return closureState;
     }
 
-        private boolean addToArray(Set<State> givenState){
+    private void getAllClosures2(State s){
+        Set<State> closureState;
+        Set<State> newSet;
+        Set<State> currentSet;
+
+        Set<State> adding = new HashSet<>();
+
+        closureState = nfa.epsilonClosure(s);
+
+        if (closureState == null){
+            return;
+        }
+        addToArray(closureState);
+
+
+        while (!queue.isEmpty())
+        {
+            closureState = queue.remove();
+
+            for (int c:
+                    symbols) {
+
+                // mov(estado, char) ej: {2,10}
+                currentSet = nfa.mov(closureState,c);
+
+                for (State mov:
+                        currentSet) {
+
+                    // epsilon - (mov(A,a)) -> ({2,10}
+                    newSet = nfa.epsilonClosure(mov);
+
+                    if (!newSet.isEmpty()){
+                        for (State s1:
+                             newSet) {
+                            adding.add(s1);
+                        }
+                    }
+                }
+                if (!adding.isEmpty()){
+                    addToArray(adding);
+                    transitionTable.addTransition(closureState,c,adding);
+                    adding = new HashSet<>();
+                }
+
+            }
+
+        }
+    }
+
+    /**
+     * It tries to add the givenState into the states arraylist
+     * If it's successful, it means that there was no copies of it on the arraylist
+     * And it also adds a new state in the transition table
+     * @param givenState
+     * @return
+     */
+    private boolean addToArray(Set<State> givenState){
+            // get id of all the states in the given state
             int[] idOfGiven = new int[givenState.size()];
             int i = 0;
             for (State s:givenState) {
                 idOfGiven[i] = s.getId();
                 i++;
             }
-
+            // get id of each of the states in the states array
             int[] idOfCurr;
             for (Set<State> sn:states) {
                 idOfCurr = new int[sn.size()];
@@ -121,15 +189,18 @@ public class DFA extends Automata{
                     idOfCurr[i] = s.getId();
                     i++;
                 }
-
+                // Compare if they equal means that there is already a state with that set
                 if (Arrays.equals(idOfGiven, idOfCurr)){
+//                    System.out.println("Don't add");
+
                     return false;
                 }
             }
-
+//        System.out.println("added");
             transitionTable.addNfaDfa(givenState);
-
             this.states.add(givenState);
+            queue.add(givenState);
+
             return true;
         }
 

@@ -108,7 +108,7 @@ public class ReadSourceCode {
 
         int curr = readNextCharInfile();
         while (curr >= 0){
-            if (DefaultValues.letter.contains(curr) && isConcat){
+            if ((DefaultValues.letter.contains(curr) || curr == (int) '(') && isConcat){
                 isConcat = false;
                 parsePostfix((int) '&');
             } else {
@@ -129,9 +129,12 @@ public class ReadSourceCode {
 
     private void parsePostfix(int curr){
                     // if curr is a letter or a number, then add it to the queue
-                    if (DefaultValues.letter.contains(curr) || curr==(int)'*'){
+                    if (DefaultValues.letter.contains(curr) || curr==(int)'*'|| curr==(int)'+'|| curr==(int)'?'){
                         this.postfix.add(curr);
+
+                        // if (DefaultValues.letter.contains(curr) )
                         isConcat = true;
+
                     }
                     // if curr is opern parentesis then we will have to push it on to stack
                     else if ((char) curr == '('){
@@ -149,18 +152,18 @@ public class ReadSourceCode {
                     } 
                     // else, it means there is an operator
                     else if (DefaultValues.operators.contains(curr)){
+
                         while (!stack.isEmpty() && Importance((char) curr) <= Importance(stack.peek())){ 
                             if(stack.peek() == '(') 
                                 System.out.println("[-] ERROR: ReadSourceCode: changeToPostfix: invalid expression (else)"); 
-                                this.postfix.add(stack.pop());
-                        } 
+                            this.postfix.add(stack.pop());
+                        }
+
                         isConcat = false;
                         stack.push(curr); 
                     } else {
                         System.err.println("[-] ERROR: (ReadSourceCode:changeToPostfix) - cannot interpret sign: " + (char) curr);
                     }
-        
-                    // read next char
     }
 
     /**

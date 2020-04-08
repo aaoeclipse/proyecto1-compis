@@ -17,6 +17,7 @@ public class Token <T>{
     boolean hasValue = false;
     String name = "";
     private T value;
+    public int kind;
 
     @SuppressWarnings("rawtypes")
     public Token(String name, T value){

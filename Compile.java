@@ -1,10 +1,10 @@
 import lexicalanalyzer.Parser;
+import lexicalanalyzer.cocor.ScannerCocor;
 
-import java.util.Scanner;
 
 public class Compile {
     public static void main(String... args){
-        Scanner scanner = new Scanner(args[0]);
+        ScannerCocor scanner = new ScannerCocor(args[0]);
         Parser parser = new Parser(scanner);
         parser.Parse();
         System.out.println(parser.errors.count + " errors detected");

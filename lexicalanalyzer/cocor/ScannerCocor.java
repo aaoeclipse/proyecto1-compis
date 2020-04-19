@@ -11,11 +11,25 @@ public class ScannerCocor {
         this.scanner = new Scanner(filepath);
     }
 
+    // public ScannerCocor(Stream s){}
+
+
     /**
      * Reads token by token of the codes
      * @return
      */
-    public Token Scan(){
+    public Token<Integer> Scan(){
         return null;
+    }
+
+    public Token<Integer> Peek(){
+        return null;
+    }
+
+    /**
+     * resets peeking to the current scanner position
+     */
+    public void ResetPeek(){
+
     }
 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Parser {
     private ScannerCocor scanner;
     public Errors errors;
+
     // Look ahead token
     Token la;
 

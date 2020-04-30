@@ -30,7 +30,6 @@ public class NFA extends Automata{
     private int numArrayState;
 
     private Set<Trans> transitionTable;
-
     private ArrayList<State[]> allStates;
 
     public NFA(PostfixTree postfixTree){
@@ -41,6 +40,38 @@ public class NFA extends Automata{
         this.counterId = 0;
         this.allStates = new ArrayList<>();
         Thompson();
+    }
+
+    public NFA(ArrayList<Integer> toCreate, int option){
+        this.transitionTable = new HashSet<>();
+        this.counterId = 0;
+        this.allStates = new ArrayList<>();
+        State[] initialFinal = createStates(2);
+        initialFinal[0].setInitialState(true);
+        initialFinal[1].setFinalState(true);
+        State[] s;
+        // option 0 means it's an or for each case
+        if (option == 0){
+            for (int i:
+                 toCreate) {
+                s = createStates(1);
+                this.transitionTable.add(new Trans(initialFinal[0], DefaultValues.EPSILON, s[0]));
+                this.transitionTable.add(new Trans(s[0], i, initialFinal[1]));
+            }
+        }
+        // option 1 means it's and for each case
+        if (option == 1){
+            s = createStates(toCreate.size()+1);
+            this.transitionTable.add(new Trans(initialFinal[0], DefaultValues.EPSILON, s[0]));
+            for (int i=0; i < toCreate.size();i++){
+                this.transitionTable.add(new Trans(s[i], toCreate.get(i), s[i+1]));
+            }
+            this.transitionTable.add(new Trans(s[s.length-1], DefaultValues.EPSILON, initialFinal[1]));
+        }
+    }
+
+    public NFA(NFA given, int option, NFA next){
+        given.removeFinalPoints();
     }
 
 
@@ -57,6 +88,29 @@ public class NFA extends Automata{
              return false;
          }
          return (s.getFinalState() || epsilonToEnd(s));
+    }
+
+    public boolean SimulateString(String reader){
+        int counter = 0;
+
+        char[] test = reader.toCharArray();
+        int c = test[counter];
+
+        State s = firstStartingState();
+
+        while ( c != DefaultValues.EOF && s != null) {
+            s = mover(s,c);
+            if (counter+1 < test.length) {
+                counter++;
+                c = test[counter];
+            }
+            else
+                break;
+        }
+        if (s == null){
+            return false;
+        }
+        return (s.getFinalState() || epsilonToEnd(s));
     }
 
     /**
@@ -105,6 +159,27 @@ public class NFA extends Automata{
             }
         }
         return states;
+    }
+
+    public State firstStartingState(){
+        for (Trans t:
+             transitionTable) {
+            if (t.getState().getInitialState())
+                return t.getState();
+        }
+        return null;
+    }
+
+    public Set<Trans> getTransitionTable(){
+        return this.transitionTable;
+    }
+    public State firstFinalState(){
+        for (Trans t:
+                transitionTable) {
+            if (t.getState().getFinalState())
+                return t.getState();
+        }
+        return null;
     }
 
     public State getStartingState() {
@@ -330,6 +405,7 @@ public class NFA extends Automata{
      */
     private void caseOr(Node<Integer> currNode) {
         State[] states = null;
+
         // check if there are operands on child
         if (currNode.getLeftChild().isOperand() || currNode.getRightChild().isOperand()){
             if (currNode.getLeftChild().isOperand() && currNode.getRightChild().isOperand()){
@@ -536,10 +612,6 @@ public class NFA extends Automata{
         return toReturn;
     }
 
-    private void createTransitions(){
-
-    }
-
     @Override
     public String toString() {
         String toReturn = "List of States:\n";
@@ -594,5 +666,12 @@ public class NFA extends Automata{
                 toReturn.add(curr);
         }
         return toReturn;
+    }
+
+    public void removeStartingANDEnding(){
+        for (Trans t:
+             this.transitionTable) {
+
+        }
     }
 }

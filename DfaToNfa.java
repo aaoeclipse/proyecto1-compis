@@ -13,6 +13,7 @@ import lexicalanalyzer.reader.ReadSourceCode;
 public class DfaToNfa {
     public static void main(String... args){
         ReadSourceCode reader = new ReadSourceCode();
+
         // Open File
         if (reader.runFile(args)){
             reader.changeToPostfix();
@@ -26,6 +27,7 @@ public class DfaToNfa {
             }
 
             System.out.println(tree.getRoot());
+
             System.out.print("All Symbols!: ");
             for (int i : tree.getAllSymbols()) {
                 System.out.print((char) i+", ");

@@ -40,6 +40,19 @@ public class PostfixTree{
         System.out.println("tree created");
     }
 
+    public PostfixTree(String readLine){
+        this.nodeId = 0;
+        this.operandNodeId = -1;
+        this.size = 0;
+
+        this.allSymbols = new HashSet<>();
+        this.allOperants = new ArrayList<>();
+
+//        createTree(readLine);
+
+        System.out.println("tree created");
+    }
+
     /**
      * createTree is the main method in which the reader is going to 
      * send char by char and the tree is going to build the tree

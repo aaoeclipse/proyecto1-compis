@@ -1,5 +1,6 @@
-package lexicalanalyzer;
+package lexicalanalyzer.cocor.Reader;
 
+import lexicalanalyzer.Errors;
 import lexicalanalyzer.cocor.ScannerCocor;
 import lexicalanalyzer.tokens.Token;
 

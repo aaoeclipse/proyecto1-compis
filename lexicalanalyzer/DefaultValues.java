@@ -3,6 +3,7 @@ package lexicalanalyzer;
 import java.util.ArrayList;
 
 public class DefaultValues {
+    public static final boolean DEBUG = true;
     public static ArrayList<Integer> operators = new ArrayList<Integer>(){
         {
             add((int) '|');

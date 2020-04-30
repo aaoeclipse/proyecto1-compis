@@ -13,11 +13,19 @@
  */
 package lexicalanalyzer.tokens;
 
+import lexicalanalyzer.automatas.DFA;
+import lexicalanalyzer.automatas.NFA;
+
+import java.util.ArrayList;
+
 public class Token <T>{
     boolean hasValue = false;
     String name = "";
     private T value;
     public int kind;
+    private NFA nfaToken;
+
+    public DFA DFA;
 
     @SuppressWarnings("rawtypes")
     public Token(String name, T value){
@@ -50,13 +58,36 @@ public class Token <T>{
         this.hasValue = true;
     }
 
+    public void addNFA(String option){
+
+        if (option.equalsIgnoreCase("character")){
+            nfaToken = new NFA((ArrayList<Integer>) value, 0);
+        } else if (option.equalsIgnoreCase("keyword")){
+            nfaToken = new NFA((ArrayList<Integer>) value, 1);
+        }
+    }
+
+    public String printNFA(){
+        return nfaToken.toString();
+    }
+
+    public boolean testNFA(String s){
+        return nfaToken.SimulateString(s);
+    }
+
     @Override
     public String toString(){
         String toReturn = "";
-        toReturn += "<" + this.name;
+        toReturn += "<" + this.name ;
+
+//        if (characters != null){
+//            toReturn += "" + this.characters;
+//        }
+
         if (this.hasValue){
             toReturn += ", " + this.value;
         }
+
         toReturn += ">";
         return toReturn;
     }

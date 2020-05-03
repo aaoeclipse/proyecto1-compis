@@ -14,8 +14,10 @@ public class NFA2 {
     ArrayList<State> states;
     ArrayList<TransitionNFA> transitionTable;
     int counter;
+    public boolean keyword;
 
-    public NFA2(Token currentNFA) {
+    public NFA2(Token currentNFA, boolean keyword) {
+        this.keyword = keyword;
         this.states = new ArrayList<>();
         this.transitionTable = new ArrayList<>();
         counter = 0;
@@ -23,8 +25,12 @@ public class NFA2 {
     }
 
     public boolean Simulate(String s){
+        if (s == null){
+            return false;
+        }
         State currState = getState(0);
         String c;
+
         for (int i = 0; i < s.length(); i++){
             c = "" + s.charAt(i);
             currState = transition(currState, c);

@@ -11,6 +11,8 @@ public class Compile {
 
         // blocks: (Characters, Keywords, Tokens, Production)
         cocolblock.readBlocks();
+
+        cocolblock.readFile("P2/test.txt");
     }
 
 }

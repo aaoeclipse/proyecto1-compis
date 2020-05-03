@@ -20,9 +20,11 @@ public class Tokenizer {
     KeyWords keywords;
     char[] SymbolsCocor;
     ArrayList<String> nameOfTokens;
+    boolean expection;
 
 
     public Tokenizer(){
+        expection = false;
         tokens = new ArrayList<>();
         nameOfTokens = new ArrayList<>();
         SymbolsCocor = new char[] {
@@ -42,6 +44,7 @@ public class Tokenizer {
      * @param str_before_adf
      */
     public void addToken(String name, String str_before_adf){
+        expection = false;
         if (str_before_adf.charAt(0) == ' '){
             str_before_adf = str_before_adf.substring( 1, str_before_adf.length() );
         }
@@ -75,7 +78,11 @@ public class Tokenizer {
             nameOfTokens.add(str_splitted[0].substring( position, ( position+relativePos) - 1 ) );
         }
 
-        // TODO: check str_splitted has more than 1 word
+        if (str_splitted.length > 1){
+            if (str_splitted[1].contains("EXCEPT")){
+                expection = true;
+            }
+        }
 
         if (DefaultValues.DEBUG) {
             System.out.println("str_before_adf = " + str_before_adf);
@@ -118,7 +125,7 @@ public class Tokenizer {
                     mainDFA = nfa2s.get(numToken);
                     numToken++;
                 }else{
-                    mainDFA = new NFA2(searchToken(nameOfTokens.get(0)));
+                    mainDFA = new NFA2(searchToken(nameOfTokens.get(0)), expection);
                 }
             }else{
                 if (isNumeric(nameOfTokens.get(i))){
@@ -151,7 +158,7 @@ public class Tokenizer {
             return null;
 
         System.out.println("betweenbrackets.get(0)) = " + betweenbrackets);
-        NFA2 toReturn = new NFA2(searchToken(betweenbrackets.get(0)));
+        NFA2 toReturn = new NFA2(searchToken(betweenbrackets.get(0)), expection);
         if (betweenbrackets.size() == 1) {
             toReturn.Thompson(searchToken(betweenbrackets.get(0)), 2);
             return toReturn;
@@ -188,6 +195,55 @@ public class Tokenizer {
             }
         }
         System.out.println();
+    }
+
+    public boolean Simulate(String s){
+        for (Token<NFA2> t: this.tokens) {
+            if (t.getValue().Simulate(s)) {
+                if (t.getValue().keyword) {
+                    for (Token keyword : this.keywords.keywords) {
+                        if (keyword.testNFA(s)) {
+                            System.out.println("[Error] Token recognized " + t.getName() + "but is KEYWORD");
+                            return true;
+                        }
+                    }
+                }
+                System.out.println(t.getName());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Token> extraSimulate(String s){
+        ArrayList<Token> toReturn = new ArrayList<>();
+        String[] ss = s.split(" ");
+        int max_length = tokens.size();
+        if (keywords.keywords.size() > tokens.size())
+            max_length = keywords.keywords.size();
+        boolean keywordFlag = false;
+        for (String se:ss) {
+            keywordFlag = false;
+
+            for (int i = 0; i < keywords.keywords.size(); i++) {
+                // check if keyword
+                    if (keywords.keywords.get(i).testNFA(se)) {
+                        keywordFlag = true;
+                        toReturn.add(keywords.keywords.get(i));
+                    }
+            }
+            if (!keywordFlag) {
+                for (Token<NFA2> t : tokens) {
+                    // check if token
+                    if (t.getValue().Simulate(se)) {
+                        toReturn.add(t);
+                    }
+                }
+            }
+
+        }
+        return toReturn;
+
     }
 
     private ArrayList<String> postfix(ArrayList<String> test){

@@ -24,6 +24,7 @@ public class Token <T>{
     private T value;
     public int kind;
     private NFA nfaToken;
+    public boolean iskey;
 
     public DFA DFA;
 
@@ -32,11 +33,20 @@ public class Token <T>{
         this.name = name;
         this.value = value;
         this.hasValue = true;
+        this.iskey = false;
+    }
+
+    public Token(String name, T value, boolean iskey){
+        this.name = name;
+        this.value = value;
+        this.hasValue = true;
+        this.iskey = iskey;
     }
 
     public Token(String name){
         this.name = name;
         this.hasValue = false;
+        this.iskey = false;
     }
 
     // GETTERS

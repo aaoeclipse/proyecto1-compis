@@ -46,7 +46,10 @@ public class NFA extends Automata{
 
     public NFA(ArrayList<Integer> toCreate, int option){
         trulyStates = new ArrayList<>();
-
+        if (toCreate.size() == 1 && (toCreate.get(0) < 0)){
+            createCHR(toCreate.get(0)*(-1));
+            return;
+        }
         this.transitionTable = new HashSet<>();
         this.counterId = 0;
         this.allStates = new ArrayList<>();
@@ -72,6 +75,24 @@ public class NFA extends Automata{
             }
             this.transitionTable.add(new Trans(s[s.length-1], DefaultValues.EPSILON, initialFinal[1]));
         }
+    }
+
+    private void createCHR(int i) {
+        this.transitionTable = new HashSet<>();
+        this.counterId = 0;
+        this.allStates = new ArrayList<>();
+        State[] s;
+        s = createStates(i);
+        s[0].setInitialState(true);
+        for (int j = 1; j < s.length; j++) {
+            this.transitionTable.add(new Trans(s[j-1], (int) ' ', s[j]));
+        }
+        s[s.length-1].setFinalState(true);
+
+    }
+
+    public boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
     }
 
     public NFA(NFA given, int option, NFA next, boolean repeat){

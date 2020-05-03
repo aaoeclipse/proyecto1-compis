@@ -3,7 +3,7 @@ package lexicalanalyzer;
 import java.util.ArrayList;
 
 public class DefaultValues {
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     public static ArrayList<Integer> operators = new ArrayList<Integer>(){
         {
             add((int) '|');
@@ -39,7 +39,11 @@ public class DefaultValues {
             for (int i=0; i<10;i++){
                 add(48+i);
             }
-            add(EPSILON);        
+            add(EPSILON);
+            add((int) '"');
+            add((int) '=');
+            add((int) '.');
+            add((int) ' ');
         }
     };
     public static int EOF = -2;

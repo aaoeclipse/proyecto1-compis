@@ -20,7 +20,10 @@ public class Characters {
 
     public void addChars(String name, String charsToAdd){
         charsToAdd = charsToAdd.replaceAll("\"|\"|\\.", "");
+        name = name.replaceAll("\\s+","");
+
         ArrayList<Integer> currChars = new ArrayList<>();
+
         if (charsToAdd.contains("CHR")) {
             // get content between chr
             currChars.add(-(Integer.parseInt(charsToAdd.split("[\\(\\)]")[1])));
@@ -86,5 +89,13 @@ public class Characters {
             }
         }
         return null;
+    }
+
+    public ArrayList<String> getAllNames() {
+        ArrayList<String> toReturn = new ArrayList<>();
+        for (int i = 0; i < this.availableChar.size(); i++) {
+            toReturn.add(availableChar.get(i).getName());
+        }
+        return toReturn;
     }
 }

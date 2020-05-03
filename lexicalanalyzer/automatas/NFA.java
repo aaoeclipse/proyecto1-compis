@@ -29,11 +29,13 @@ public class NFA extends Automata{
     private int counterId;
     private int numArrayState;
 
-    private Set<Trans> transitionTable;
+    public Set<Trans> transitionTable;
     private ArrayList<State[]> allStates;
+    public ArrayList<State> trulyStates;
 
     public NFA(PostfixTree postfixTree){
         this.transitionTable = new HashSet<>();
+        trulyStates = new ArrayList<>();
 
         this.postfixTree = postfixTree;
         this.visitor = new VisitorTree(postfixTree);
@@ -43,6 +45,8 @@ public class NFA extends Automata{
     }
 
     public NFA(ArrayList<Integer> toCreate, int option){
+        trulyStates = new ArrayList<>();
+
         this.transitionTable = new HashSet<>();
         this.counterId = 0;
         this.allStates = new ArrayList<>();
@@ -50,7 +54,7 @@ public class NFA extends Automata{
         initialFinal[0].setInitialState(true);
         initialFinal[1].setFinalState(true);
         State[] s;
-        // option 0 means it's an or for each case
+        // option 0 means it's an 'or' for each case
         if (option == 0){
             for (int i:
                  toCreate) {
@@ -70,10 +74,77 @@ public class NFA extends Automata{
         }
     }
 
-    public NFA(NFA given, int option, NFA next){
-        given.removeFinalPoints();
+    public NFA(NFA given, int option, NFA next, boolean repeat){
+        trulyStates = given.getTrullyStates();
+        transitionTable = given.transitionTable;
+
+        int numberOfStates1 = given.getNumOfStates();
+        System.out.println("numberOfStates1 = " + numberOfStates1);
+
+        // CONCAT
+        if (option == 0){
+            // changing id
+            for (State st:next.trulyStates) {
+                st.setId(st.getId()+numberOfStates1);
+            }
+//            next.removeStartingPointsTrans();
+            System.out.println(transitionTable);
+            for (Trans t: next.transitionTable) {
+                transitionTable.add(t);
+            }
+        }
+        // OR
+        if (option == 1){
+            numberOfStates1 = given.getNumOfStates()+1;
+            // changing id
+            for (Trans t: next.transitionTable) {
+                t.getState().setId(numberOfStates1+t.getState().getId());
+                t.getNextState().setId(numberOfStates1+t.getNextState().getId());
+            }
+        }
+        // { }
+        if (repeat){
+            this.transitionTable.add( new Trans( firstStartingState(), DefaultValues.EPSILON, firstFinalState() ) );
+            this.transitionTable.add( new Trans( firstFinalState(), DefaultValues.EPSILON, firstStartingState() ) );
+        }
+
     }
 
+    public ArrayList<State> getTrullyStates(){
+        return this.trulyStates;
+    }
+
+    private int getNumOfStates() {
+        int valuetoreturn = 0;
+        for (Trans t:
+             transitionTable) {
+               if (t.getState().getId() > valuetoreturn)
+                   valuetoreturn = t.getState().getId();
+               if (t.getNextState().getId() > valuetoreturn)
+                    valuetoreturn = t.getNextState().getId();
+        }
+        return valuetoreturn;
+    }
+
+    private void removeFinalPointsTrans() {
+        for(State st: trulyStates)
+            st.setFinalState(false);
+    }
+
+    public void addToIds(int newVaue){
+        for (State st:trulyStates) {
+            st.setId(st.getId()+newVaue);
+        }
+    }
+
+    private void removeStartingPointsTrans() {
+        for (Trans t:
+                transitionTable) {
+            if (t.getState().getInitialState()){
+                t.getState().setInitialState(false);
+            }
+        }
+    }
 
     public boolean Simulate(ReadSourceCode reader){
          int c = reader.readNextCharInfile();
@@ -509,10 +580,7 @@ public class NFA extends Automata{
         return this.allStates;
     }
 
-    /**
-     *
-     * @param currNode
-     */
+
     private void caseConcat(Node<Integer> currNode) {
         State[] states = null;
 
@@ -605,8 +673,11 @@ public class NFA extends Automata{
 
     private State[] createStates(int numberOfStates){
         State[] toReturn = new State[numberOfStates];
+        State temp;
         for (int i=0;i<numberOfStates;i++){
-            toReturn[i] = new State(this.counterId);
+            temp = new State(this.counterId);
+            trulyStates.add(temp);
+            toReturn[i] = temp;
             counterId++;
         }
         return toReturn;
@@ -615,16 +686,6 @@ public class NFA extends Automata{
     @Override
     public String toString() {
         String toReturn = "List of States:\n";
-        // All States
-        for (State[] n:
-             this.allStates) {
-            toReturn += "" +(char) n[0].getSymbol() + " = [ ";
-            for (State s:
-                 n) {
-                toReturn += s.getId()+" ,";
-            }
-            toReturn += "]\n";
-        }
 
         // Transition Table
         toReturn += "List of States:\n";

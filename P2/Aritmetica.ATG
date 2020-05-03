@@ -40,10 +40,10 @@ Term<ref int result>=				(.int result1,result2;.)
 	   | "/"Factor<ref result2>	(.result1/=result2;.)
 	}							(.result=result1;.)
 	.
-	
+
 Factor<ref int result> =	(.int signo=1;.)
 	["-"(.signo = -1;.)]
 	( Number<ref result> | "("Expression< ref result>")") (.result*=signo;.).
-	
+
 Number<ref int result> =  number (. result = int.Parse(lastToken.Value).).
 END Aritmetica

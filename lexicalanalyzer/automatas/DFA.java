@@ -4,13 +4,22 @@ import lexicalanalyzer.DefaultValues;
 import lexicalanalyzer.PostfixTree;
 import lexicalanalyzer.VisitorTree;
 import lexicalanalyzer.automatas.equations.State;
-import lexicalanalyzer.automatas.equations.Trans;
 
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 import lexicalanalyzer.automatas.equations.TransitionTnfaDfa;
 import lexicalanalyzer.reader.ReadSourceCode;
 import lexicalanalyzer.tokens.Node;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 
 import java.lang.reflect.Array;
 
@@ -23,8 +32,8 @@ public class DFA extends Automata{
 
     private PostfixTree tree;
     private VisitorTree visitor;
-    private Queue<Set<State>> queue;
 
+    private Queue<Set<State>> queue;
 
     public DFA(){
 
@@ -34,7 +43,6 @@ public class DFA extends Automata{
         this.tree = tree;
         this.visitor = new VisitorTree(tree);
     }
-
 
     public boolean Simulate(ReadSourceCode reader){
         int c = reader.readNextCharInfile();
@@ -56,7 +64,6 @@ public class DFA extends Automata{
 
     }
 
-
     /**
      * it's given a nfa and it transform it to a dfa
      * @param nfa
@@ -71,11 +78,9 @@ public class DFA extends Automata{
         // initiate the transition table
         this.transitionTable = new TransitionTnfaDfa(symbols, nfa.getFinalState(), nfa.getInitialId());
         // get the initial state
-        State s = nfa.getStartingState();
-
+        State s = nfa.firstStartingState();
         // fill the table of transition (DFA)
         getAllClosures2(s);
-
         // debug
          System.out.println(transitionTable);
     }
@@ -204,8 +209,6 @@ public class DFA extends Automata{
             return true;
         }
 
-
-
     private void setSymbols(){
         this.usedSymbols = new ArrayList<>();
 
@@ -216,5 +219,43 @@ public class DFA extends Automata{
 
     private Integer nextSymbol(){
         return null;
+    }
+
+    public void export_json(String filename){
+        // TODO export the contents of this class so it can be imported easily
+        JSONObject dfaJson = new JSONObject();
+
+        try (FileWriter file = new FileWriter("Dfa.json")) {
+
+            file.write(dfaJson.toJSONString());
+            file.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void import_json(JSONObject json){
+        //JSON parser object to parse read file
+        JSONParser jsonParser = new JSONParser();
+
+        try (FileReader reader = new FileReader("employees.json"))
+        {
+            //Read JSON file
+            Object obj = jsonParser.parse(reader);
+
+            JSONArray employeeList = (JSONArray) obj;
+            System.out.println(employeeList);
+
+            //Iterate over employee array
+//            employeeList.forEach( emp -> parseEmployeeObject( (JSONObject) emp ) );
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

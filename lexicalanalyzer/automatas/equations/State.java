@@ -64,4 +64,8 @@ public class State{
         toReturn += '}';
         return toReturn;
     }
+
+    public void setId(int numberOfStates1) {
+        this.id = numberOfStates1;
+    }
 }

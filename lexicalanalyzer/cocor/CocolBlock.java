@@ -98,13 +98,14 @@ public class CocolBlock {
             }
 
         }
+        String[] testCases = new String[] {
+          "aa", "a", "a2", "2a", "2", "222", "a2a", " "
+        };
 
-//
-//        String[] toTest = new String[]{
-//                "asdf", "3dasdf", "if", "1","134"
-//        };
-//        // Expected result: true, false, false, true, true
-//        this.tokenizer.test(toTest);
+        this.tokenizer.test(testCases);
+
+        // Read line by line and check if it's token
+
 
     }
 

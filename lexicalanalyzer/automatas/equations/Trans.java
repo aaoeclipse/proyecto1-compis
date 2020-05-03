@@ -14,9 +14,7 @@ public class Trans {
         return this.state;
     }
 
-    public int getCharacter() {
-        return character;
-    }
+    public int getCharacter() { return character; }
 
     public State getNextState(){
         return nextState;
@@ -50,7 +48,6 @@ public class Trans {
             toReturn += "(I)";
         if(nextState.getFinalState())
             toReturn += "(F)";
-
         return toReturn;
     }
 

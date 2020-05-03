@@ -59,12 +59,15 @@ public class Token <T>{
     }
 
     public void addNFA(String option){
-
         if (option.equalsIgnoreCase("character")){
             nfaToken = new NFA((ArrayList<Integer>) value, 0);
         } else if (option.equalsIgnoreCase("keyword")){
             nfaToken = new NFA((ArrayList<Integer>) value, 1);
         }
+    }
+
+    public NFA getNFA(){
+        return this.nfaToken;
     }
 
     public String printNFA(){

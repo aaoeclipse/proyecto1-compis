@@ -158,9 +158,9 @@ public class ReadSourceCode {
                                 System.out.println("[-] ERROR: ReadSourceCode: changeToPostfix: invalid expression (else)"); 
                             this.postfix.add(stack.pop());
                         }
-
                         isConcat = false;
-                        stack.push(curr); 
+                        stack.push(curr);
+
                     } else {
                         System.err.println("[-] ERROR: (ReadSourceCode:changeToPostfix) - cannot interpret sign: " + (char) curr);
                     }
